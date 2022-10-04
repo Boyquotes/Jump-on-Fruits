@@ -94,7 +94,7 @@ func _on_hurtbox_body_entered(body):
 	hitted = false
 	if life<=0:
 		queue_free()
-		get_tree().reload_current_scene()
+		Reset._reset_all()
 	
 func on_knockback(body):
 	knockback_dir = dir*-1

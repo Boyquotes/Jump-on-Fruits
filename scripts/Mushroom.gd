@@ -3,13 +3,18 @@ extends KinematicBody2D
 var speed = 75
 var gravity = 1200
 var velocity = Vector2(0,0)
-var stop = false
+export var stop = false
 var life = 2
 var hitted = false
 var move_direction = -1
+export var start_left = true
 
-
-
+func _ready():
+	if !start_left:
+		move_direction = 1
+		$ground_ray.position.x *=-1
+		$wall_ray.scale.x *= -1
+		
 func _physics_process(delta: float):
 	velocity[0] = speed*move_direction
 	if stop:

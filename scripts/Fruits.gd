@@ -1,11 +1,16 @@
-extends Node
+extends Area2D
 
-#var apple_scene = preload("res://items/apple.tscn")
-#var apple_ins = apple_scene.instance()
-
+export var value = 1
 func _ready():
-	#apple_ins.name = "apple2"
-	#apple_ins.position = Vector2(20,20)
-	#self.add_child(apple_ins)
 	pass
-	
+
+
+func _on_fruit_body_entered(_body):
+	$animation.play("collected")
+	Global.fruits+=value
+	get_node("/root/Hud/up_left/last_fruit/sprite").set_texture($sprite.texture)
+	#print(Global.fruits)
+
+func _on_animation_animation_finished(anim_name):
+	if anim_name == "collected":
+		queue_free()

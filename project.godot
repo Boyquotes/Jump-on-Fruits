@@ -24,6 +24,13 @@ config/name="Pixel Adventure"
 run/main_scene="res://levels/level1.tscn"
 config/icon="res://icon.png"
 
+[autoload]
+
+Global="*res://preload/Global.gd"
+Hud="*res://preload/HUD.tscn"
+HudScript="*res://preload/HUD.gd"
+Reset="*res://preload/reset.gd"
+
 [display]
 
 window/size/width=320
