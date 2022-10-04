@@ -1,27 +1,8 @@
-[gd_scene load_steps=7 format=2]
+[gd_scene load_steps=6 format=2]
 
 [ext_resource path="res://items/apple.tscn" type="PackedScene" id=1]
 [ext_resource path="res://Pixel Adventure 1/Free/Items/Fruits/Cherries.png" type="Texture" id=2]
 [ext_resource path="res://Pixel Adventure 1/Free/Items/Fruits/Collected.png" type="Texture" id=3]
-
-[sub_resource type="GDScript" id=3]
-script/source = "extends Area2D
-
-func _ready():
-	pass
-
-
-func _on_apple_body_entered(body):
-	$animation.play(\"collected\")
-
-
-func _on_animation_animation_finished(anim_name):
-	if anim_name == \"collected\":
-		queue_free()
-
-
-	
-"
 
 [sub_resource type="Animation" id=1]
 resource_name = "collected"
@@ -129,7 +110,7 @@ tracks/3/keys = {
 }
 
 [node name="cherries" instance=ExtResource( 1 )]
-script = SubResource( 3 )
+value = 5
 
 [node name="animation" parent="." index="1"]
 anims/collected = SubResource( 1 )
