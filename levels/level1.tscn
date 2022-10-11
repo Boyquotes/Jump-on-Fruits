@@ -1,4 +1,4 @@
-[gd_scene load_steps=18 format=2]
+[gd_scene load_steps=23 format=2]
 
 [ext_resource path="res://Player.tscn" type="PackedScene" id=1]
 [ext_resource path="res://Pixel Adventure 1/Free/Terrain/Seasonal Tilesets/1 - Grassland/Background parts/1 - Foreground_scenery.png" type="Texture" id=2]
@@ -12,6 +12,11 @@
 [ext_resource path="res://traps/moving_platform.tscn" type="PackedScene" id=10]
 [ext_resource path="res://traps/Falling_Plat.tscn" type="PackedScene" id=11]
 [ext_resource path="res://items/banana.tscn" type="PackedScene" id=12]
+[ext_resource path="res://items/pineapple.tscn" type="PackedScene" id=13]
+[ext_resource path="res://items/kiwi.tscn" type="PackedScene" id=14]
+[ext_resource path="res://items/melon.tscn" type="PackedScene" id=15]
+[ext_resource path="res://items/orange.tscn" type="PackedScene" id=16]
+[ext_resource path="res://items/cherries.tscn" type="PackedScene" id=17]
 [ext_resource path="res://enemies/Mushroom.tscn" type="PackedScene" id=19]
 
 [sub_resource type="Shader" id=1]
@@ -140,8 +145,47 @@ position = Vector2( 902, -140 )
 
 [node name="fruits" type="Node2D" parent="."]
 
+[node name="kiwi3" parent="fruits" instance=ExtResource( 14 )]
+position = Vector2( 359, -53 )
+
+[node name="kiwi2" parent="fruits" instance=ExtResource( 14 )]
+position = Vector2( 343, -53 )
+
+[node name="kiwi" parent="fruits" instance=ExtResource( 14 )]
+position = Vector2( 326, -52 )
+
+[node name="cherries5" parent="fruits" instance=ExtResource( 17 )]
+position = Vector2( 223, -149 )
+
+[node name="cherries4" parent="fruits" instance=ExtResource( 17 )]
+position = Vector2( 222, -124 )
+
+[node name="cherries3" parent="fruits" instance=ExtResource( 17 )]
+position = Vector2( 223, -101 )
+
 [node name="apple" parent="fruits" instance=ExtResource( 9 )]
 position = Vector2( 495, 59 )
+
+[node name="banana" parent="fruits" instance=ExtResource( 12 )]
+position = Vector2( 335, 91 )
+
+[node name="cherries" parent="fruits" instance=ExtResource( 17 )]
+position = Vector2( 222, -52 )
+
+[node name="cherries2" parent="fruits" instance=ExtResource( 17 )]
+position = Vector2( 222, -76 )
+
+[node name="melon" parent="fruits" instance=ExtResource( 15 )]
+position = Vector2( 326, -76 )
+
+[node name="melon2" parent="fruits" instance=ExtResource( 15 )]
+position = Vector2( 350, -76 )
+
+[node name="orange" parent="fruits" instance=ExtResource( 16 )]
+position = Vector2( 374, -36 )
+
+[node name="pineapple" parent="fruits" instance=ExtResource( 13 )]
+position = Vector2( 470, 20 )
 
 [node name="moving_platform" parent="." instance=ExtResource( 10 )]
 position = Vector2( 318, -36 )
@@ -159,10 +203,19 @@ distance = 30
 position = Vector2( 222, -36 )
 horizontal = false
 
-[node name="banana" parent="." instance=ExtResource( 12 )]
-position = Vector2( 335, 91 )
-
 [node name="Player" parent="." instance=ExtResource( 1 )]
 position = Vector2( 94, -148 )
+
+[node name="melon" parent="." instance=ExtResource( 15 )]
+position = Vector2( 183, 3 )
+
+[node name="melon2" parent="." instance=ExtResource( 15 )]
+position = Vector2( 183, 67 )
+
+[node name="melon3" parent="." instance=ExtResource( 15 )]
+position = Vector2( 151, 67 )
+
+[node name="melon4" parent="." instance=ExtResource( 15 )]
+position = Vector2( 127, 67 )
 
 [connection signal="body_entered" from="map/Fallzone" to="map/Fallzone" method="_on_Fallzone_body_entered"]
