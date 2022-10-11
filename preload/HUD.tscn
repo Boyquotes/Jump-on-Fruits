@@ -1,8 +1,17 @@
-[gd_scene load_steps=7 format=2]
+[gd_scene load_steps=10 format=2]
 
 [ext_resource path="res://Pixel Adventure 1/Free/Items/Fruits/Apple.png" type="Texture" id=1]
 [ext_resource path="res://preload/HUD.gd" type="Script" id=2]
 [ext_resource path="res://fonts/Silkscreen-Regular.ttf" type="DynamicFontData" id=3]
+[ext_resource path="res://Pixel Adventure 1/Free/Other/heart.png" type="Texture" id=4]
+[ext_resource path="res://Pixel Adventure 1/Free/Other/clock.png" type="Texture" id=5]
+[ext_resource path="res://preload/Timer_Script.gd" type="Script" id=6]
+
+[sub_resource type="DynamicFont" id=3]
+outline_size = 1
+outline_color = Color( 0.0862745, 0.0823529, 0.0823529, 1 )
+use_mipmaps = true
+font_data = ExtResource( 3 )
 
 [sub_resource type="Animation" id=1]
 length = 0.001
@@ -84,39 +93,82 @@ tracks/2/keys = {
 "values": [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15 ]
 }
 
-[sub_resource type="DynamicFont" id=3]
-outline_size = 1
-outline_color = Color( 0.0862745, 0.0823529, 0.0823529, 1 )
-use_mipmaps = true
-font_data = ExtResource( 3 )
-
 [node name="HUD" type="CanvasLayer"]
 script = ExtResource( 2 )
 
-[node name="up_left" type="Control" parent="."]
-margin_right = 40.0
-margin_bottom = 40.0
+[node name="main" type="HBoxContainer" parent="."]
+anchor_right = 1.0
+anchor_bottom = 0.167
+margin_bottom = -0.064003
 
-[node name="last_fruit" type="TextureRect" parent="up_left"]
+[node name="lifes" type="Control" parent="main"]
+margin_right = 104.0
+margin_bottom = 32.0
+size_flags_horizontal = 3
+
+[node name="icon" type="TextureRect" parent="main/lifes"]
+anchor_top = 0.5
+anchor_bottom = 0.5
+margin_top = -12.5
+margin_right = 24.0
+margin_bottom = 12.5
+texture = ExtResource( 4 )
+expand = true
+
+[node name="timer" type="Control" parent="main"]
+margin_left = 108.0
+margin_right = 212.0
+margin_bottom = 32.0
+size_flags_horizontal = 3
+
+[node name="icon" type="TextureRect" parent="main/timer"]
+anchor_top = 0.5
+anchor_bottom = 0.5
+margin_top = -12.0
+margin_right = 24.0
+margin_bottom = 12.0
+texture = ExtResource( 5 )
+expand = true
+
+[node name="clock" type="Label" parent="main/timer"]
+margin_left = 32.0
+margin_top = 4.0
+margin_right = 88.0
+margin_bottom = 28.0
+custom_fonts/font = SubResource( 3 )
+text = "00:00"
+
+[node name="Timer" type="Timer" parent="main/timer"]
+autostart = true
+script = ExtResource( 6 )
+
+[node name="score" type="Control" parent="main"]
+margin_left = 216.0
+margin_right = 320.0
+margin_bottom = 32.0
+size_flags_horizontal = 3
+
+[node name="last_fruit" type="TextureRect" parent="main/score"]
 margin_right = 32.0
 margin_bottom = 32.0
 
-[node name="sprite" type="Sprite" parent="up_left/last_fruit"]
+[node name="sprite" type="Sprite" parent="main/score/last_fruit"]
 position = Vector2( 16, 16 )
 texture = ExtResource( 1 )
 hframes = 17
 
-[node name="fruit" type="AnimationPlayer" parent="up_left/last_fruit"]
+[node name="fruit" type="AnimationPlayer" parent="main/score/last_fruit"]
 root_node = NodePath("../..")
 autoplay = "motion"
 playback_speed = 2.0
 anims/RESET = SubResource( 1 )
 anims/motion = SubResource( 2 )
 
-[node name="score" type="Label" parent="up_left"]
+[node name="score" type="Label" parent="main/score"]
 margin_left = 32.0
 margin_top = 4.0
-margin_right = 160.0
+margin_right = 104.0
 margin_bottom = 28.0
 custom_fonts/font = SubResource( 3 )
-text = "Score:"
+
+[connection signal="timeout" from="main/timer/Timer" to="main/timer/Timer" method="_on_Timer_timeout"]
