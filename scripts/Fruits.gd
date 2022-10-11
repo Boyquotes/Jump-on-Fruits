@@ -8,7 +8,7 @@ func _ready():
 func _on_fruit_body_entered(_body):
 	$animation.play("collected")
 	Global.fruits+=value
-	get_node("/root/Hud/up_left/last_fruit/sprite").set_texture($sprite.texture)
+	get_node("/root/Hud/main/score/last_fruit/sprite").set_texture($sprite.texture)
 	#print(Global.fruits)
 
 func _on_animation_animation_finished(anim_name):

@@ -59,6 +59,7 @@ func _on_anim_animation_finished(anim_name):
 func _on_hurtbox_body_entered(body):
 	hitted = true
 	body.speed[1] = -350
+	body.jumps = 1
 	life-=1
 	get_node("hurtbox/box").set_deferred("disabled", true)
 	yield(get_tree().create_timer(0.3), "timeout")

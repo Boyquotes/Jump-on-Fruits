@@ -2,6 +2,7 @@ extends KinematicBody2D
 
 var speed = Vector2(0,0)
 var up = Vector2.UP
+var stop = false;
 var life = 3
 var move_speed = 100
 var gravity = 1200
@@ -11,17 +12,16 @@ var jumps = 1
 var hitted = false
 var knockback_dir = 0
 var knockback_int = 400
-var knockback_yint = -200
+var knockback_yint = -100
 onready var ground_raycasts = $RayCasts_ground
 
 func _ready():
-	pass 
+	pass
 
 func _physics_process(delta:float) -> void:
 	get_collisions()
 	set_animation()
 	move_input()
-	
 	if !hitted: 
 		speed[0] = lerp(speed[0], move_speed*dir, 0.2)
 	else:
@@ -33,7 +33,8 @@ func _physics_process(delta:float) -> void:
 	#print(speed)
 	
 func move_input():
-	dir = (int(Input.is_action_pressed("move_right")) - int(Input.is_action_pressed("move_left")))
+	if(!stop):
+		dir = (int(Input.is_action_pressed("move_right")) - int(Input.is_action_pressed("move_left")))
 	if Input.is_action_pressed("go_down") and Input.is_action_pressed("jump"):
 		#drop-through
 		pass
@@ -58,6 +59,8 @@ func set_animation():
 		current = "Jump"
 		if speed.y>0:
 			current = "Fall"
+		elif jumps==0:
+			current="Double_Jump"
 		
 	elif dir!=0:
 		current = "Run"
@@ -68,6 +71,7 @@ func set_animation():
 	if hitted:
 		current = "Hit"
 	#update
+	#print(current)
 	if $AnimationPlayer.assigned_animation!=current:
 		$AnimationPlayer.play(current)
 	
@@ -86,17 +90,18 @@ func is_grounded():
 func _on_hurtbox_body_entered(body):
 	life-=1
 	hitted = true
+	stop = true
 	on_knockback(body)
 	#immunity frames
 	get_node("hurtbox/shape").set_deferred("disabled", true)
-	yield(get_tree().create_timer(0.3),"timeout")
+	yield(get_tree().create_timer(0.5),"timeout")
 	get_node("hurtbox/shape").set_deferred("disabled", false)
 	hitted = false
 	if life<=0:
-		queue_free()
-		Reset._reset_all()
-	
+		dies()
+	stop = false
 func on_knockback(body):
+	speed[0] = 0
 	knockback_dir = dir*-1
 	if knockback_dir == 0:  #player parado
 		knockback_dir = body.move_direction
@@ -121,5 +126,7 @@ func get_collisions():
 		#	var tile = collider_obj.collider.get_cellv(tile_pos)
 		#	print(tile)
 			
-			
+func dies():
+	queue_free()
+	Global._reset_current()
 		

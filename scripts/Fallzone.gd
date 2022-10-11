@@ -8,5 +8,6 @@ func _ready():
 
 func _on_Fallzone_body_entered(body):
 	if body.name == "Player":
-		get_tree().reload_current_scene()
+		body.dies()
+		
 	
