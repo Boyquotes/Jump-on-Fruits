@@ -4,6 +4,7 @@ var speed = Vector2(0,0)
 var up = Vector2.UP
 var stop = false;
 var life = 3
+var max_life = 3
 var move_speed = 100
 var gravity = 1200
 var jump_force = 720
@@ -15,9 +16,14 @@ var knockback_int = 400
 var knockback_yint = -100
 onready var ground_raycasts = $RayCasts_ground
 
-func _ready():
-	pass
+signal change_life(life, max_life)
 
+func _ready():
+	if(Global.last_checkpoint!=null):
+		position = Global.last_checkpoint
+	connect("change_life", get_tree().get_root().get_node("Hud/main/life_holder"), "on_change_life")
+	emit_signal("change_life", life, max_life)
+	
 func _physics_process(delta:float) -> void:
 	get_collisions()
 	set_animation()
@@ -90,8 +96,8 @@ func is_grounded():
 func _on_hurtbox_body_entered(body):
 	life-=1
 	hitted = true
-	stop = true
-	on_knockback(body)
+	emit_signal("change_life", life, max_life)
+	on_knockback()
 	#immunity frames
 	get_node("hurtbox/shape").set_deferred("disabled", true)
 	yield(get_tree().create_timer(0.5),"timeout")
@@ -99,16 +105,18 @@ func _on_hurtbox_body_entered(body):
 	hitted = false
 	if life<=0:
 		dies()
-	stop = false
-func on_knockback(body):
+	
+func on_knockback():
 	speed[0] = 0
-	knockback_dir = dir*-1
-	if knockback_dir == 0:  #player parado
-		knockback_dir = body.move_direction
+	if $left.is_colliding():
+		knockback_dir = 1
+	elif $right.is_colliding():
+		knockback_dir = -1
+		
 	speed[0] = knockback_dir*knockback_int
-	#print("Knoback speed: "+String(speed))
 	speed[1] = 0
 	speed[1] = knockback_yint
+	speed = move_and_slide(speed)
 	
 
 func get_collisions():
@@ -117,8 +125,9 @@ func get_collisions():
 		var collider_obj = get_slide_collision(colliders)
 		
 		#plataforma que cai
-		if collider_obj.collider.has_method("collide_with"):
-			collider_obj.collider.collide_with(collider_obj, self)
+		if collider_obj!=null:
+			if collider_obj.collider.has_method("collide_with"):
+				collider_obj.collider.collide_with(collider_obj, self)
 		
 		#if collider_obj.collider is TileMap:
 		#	var tile_pos = collider_obj.collider.world_to_map(get_node("HitBox").position)
@@ -127,6 +136,7 @@ func get_collisions():
 		#	print(tile)
 			
 func dies():
-	queue_free()
 	Global._reset_current()
 		
+func checkpoint_entered():
+	Global.last_checkpoint = position

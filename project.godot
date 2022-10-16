@@ -12,7 +12,7 @@ _global_script_classes=[ {
 "base": "Timer",
 "class": "Clock",
 "language": "GDScript",
-"path": "res://preload/Timer_Script.gd"
+"path": "res://autoload/Timer_Script.gd"
 }, {
 "base": "EditorVCSInterface",
 "class": "GitAPI",
@@ -27,13 +27,14 @@ _global_script_class_icons={
 [application]
 
 config/name="Pixel Adventure"
-run/main_scene="res://levels/level1.tscn"
+run/main_scene="res://levels/level0.tscn"
 config/icon="res://icon.png"
 
 [autoload]
 
-Global="*res://preload/Global.gd"
-Hud="*res://preload/HUD.tscn"
+Global="*res://autoload/Global.gd"
+Hud="*res://autoload/HUD.tscn"
+Transition="*res://autoload/Transition.tscn"
 
 [display]
 

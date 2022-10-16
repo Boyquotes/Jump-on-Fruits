@@ -20,9 +20,8 @@ func _on_Timer_timeout():
 	clock.text = _clock_text(seconds, minutes)
 	
 	if(now_seconds==0):
-		self.stop()
-		yield(get_tree().create_timer(1),"timeout")
-		self.start()
+		stop()
+		yield(get_tree().create_timer(3),"timeout")
 		Global._reset_current()
 
 func _clock_text(seconds, minutes):
@@ -44,7 +43,9 @@ func _clock_animation(seconds, minutes):
 		if (minutes<1):
 			if(seconds>=16 or seconds == 0):
 				if(seconds%10==0):
-					get_node("/root/level0/Player/MainCamera").shake(0.5, 1.7)
+					if(!is_instance_valid(Global.player_camera)):
+						Global._update_nodes()
+					Global.player_camera.shake(0.5, 1.7)
 					clock.set("custom_colors/font_color", red)
 				else:
 					clock.set("custom_colors/font_color", white)
@@ -55,8 +56,9 @@ func _clock_animation(seconds, minutes):
 					clock.set("custom_colors/font_color", white)
 
 func clock_end():
-	now_seconds = limit_seconds+1
+	now_seconds = limit_seconds
 	clock.set("custom_colors/font_color", white)
+	start()
 	
 	
 

@@ -7,6 +7,7 @@ var reset
 
 func _ready():
 	reset = texture.texture
+	this_clock.start()
 	
 func _process(_delta):
 	var text = text_score.text
@@ -14,7 +15,12 @@ func _process(_delta):
 	while(text.length()>7):
 		text[text.find("0")] = "" 
 	text_score.text = text
-	
+
+func reset_procedures():
+	Global._update_nodes()
+	reset_texture()
+	reset_timer()
+	reset_title()
 	
 func reset_texture():
 	texture.texture = reset
@@ -22,4 +28,8 @@ func reset_texture():
 func reset_timer():
 	this_clock.now_seconds = this_clock.limit_seconds
 	this_clock.clock_end()
+
+func reset_title():
+	var title = get_node("/root/Hud/level_title/text")
+	title.start_tween()
 

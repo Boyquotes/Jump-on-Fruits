@@ -1,17 +1,19 @@
-[gd_scene load_steps=10 format=2]
+[gd_scene load_steps=13 format=2]
 
-[ext_resource path="res://Pixel Adventure 1/Free/Items/Fruits/Apple.png" type="Texture" id=1]
-[ext_resource path="res://preload/HUD.gd" type="Script" id=2]
-[ext_resource path="res://fonts/Silkscreen-Regular.ttf" type="DynamicFontData" id=3]
-[ext_resource path="res://Pixel Adventure 1/Free/Other/heart.png" type="Texture" id=4]
-[ext_resource path="res://Pixel Adventure 1/Free/Other/clock.png" type="Texture" id=5]
-[ext_resource path="res://preload/Timer_Script.gd" type="Script" id=6]
+[ext_resource path="res://fonts/Silkscreen-Regular.ttf" type="DynamicFontData" id=1]
+[ext_resource path="res://autoload/HUD.gd" type="Script" id=2]
+[ext_resource path="res://autoload/Timer_Script.gd" type="Script" id=3]
+[ext_resource path="res://autoload/life_holder.gd" type="Script" id=4]
+[ext_resource path="res://autoload/level_display.gd" type="Script" id=5]
+[ext_resource path="res://Pixel Adventure 1/Free/Other/heart.png" type="Texture" id=6]
+[ext_resource path="res://Pixel Adventure 1/Free/Other/clock.png" type="Texture" id=7]
+[ext_resource path="res://Pixel Adventure 1/Free/Items/Fruits/Apple.png" type="Texture" id=8]
 
 [sub_resource type="DynamicFont" id=3]
 outline_size = 1
 outline_color = Color( 0.0862745, 0.0823529, 0.0823529, 1 )
 use_mipmaps = true
-font_data = ExtResource( 3 )
+font_data = ExtResource( 1 )
 
 [sub_resource type="Animation" id=1]
 length = 0.001
@@ -49,7 +51,7 @@ tracks/2/keys = {
 "times": PoolRealArray( 0 ),
 "transitions": PoolRealArray( 1 ),
 "update": 0,
-"values": [ ExtResource( 1 ) ]
+"values": [ ExtResource( 8 ) ]
 }
 
 [sub_resource type="Animation" id=2]
@@ -93,27 +95,36 @@ tracks/2/keys = {
 "values": [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15 ]
 }
 
+[sub_resource type="DynamicFont" id=4]
+outline_size = 1
+outline_color = Color( 0.0235294, 0.0235294, 0.0235294, 1 )
+extra_spacing_char = 6
+font_data = ExtResource( 1 )
+
 [node name="HUD" type="CanvasLayer"]
 script = ExtResource( 2 )
 
 [node name="main" type="HBoxContainer" parent="."]
-anchor_right = 1.0
-anchor_bottom = 0.167
-margin_bottom = -0.064003
+margin_right = 320.0
+margin_bottom = 32.0
 
-[node name="lifes" type="Control" parent="main"]
+[node name="life_holder" type="Control" parent="main"]
 margin_right = 104.0
 margin_bottom = 32.0
 size_flags_horizontal = 3
+script = ExtResource( 4 )
 
-[node name="icon" type="TextureRect" parent="main/lifes"]
+[node name="lifes" type="TextureRect" parent="main/life_holder"]
 anchor_top = 0.5
 anchor_bottom = 0.5
-margin_top = -12.5
-margin_right = 24.0
-margin_bottom = 12.5
-texture = ExtResource( 4 )
-expand = true
+margin_top = -11.5
+margin_right = 32.0
+margin_bottom = 21.5
+rect_scale = Vector2( 0.7, 0.7 )
+texture = ExtResource( 6 )
+stretch_mode = 2
+
+[node name="animation" type="Tween" parent="main/life_holder"]
 
 [node name="timer" type="Control" parent="main"]
 margin_left = 108.0
@@ -127,7 +138,7 @@ anchor_bottom = 0.5
 margin_top = -12.0
 margin_right = 24.0
 margin_bottom = 12.0
-texture = ExtResource( 5 )
+texture = ExtResource( 7 )
 expand = true
 
 [node name="clock" type="Label" parent="main/timer"]
@@ -139,8 +150,7 @@ custom_fonts/font = SubResource( 3 )
 text = "00:00"
 
 [node name="Timer" type="Timer" parent="main/timer"]
-autostart = true
-script = ExtResource( 6 )
+script = ExtResource( 3 )
 
 [node name="score" type="Control" parent="main"]
 margin_left = 216.0
@@ -149,12 +159,15 @@ margin_bottom = 32.0
 size_flags_horizontal = 3
 
 [node name="last_fruit" type="TextureRect" parent="main/score"]
-margin_right = 32.0
-margin_bottom = 32.0
+anchor_top = 0.5
+anchor_bottom = 0.5
+margin_top = -10.0
+margin_right = 20.0
+margin_bottom = 10.0
 
 [node name="sprite" type="Sprite" parent="main/score/last_fruit"]
-position = Vector2( 16, 16 )
-texture = ExtResource( 1 )
+position = Vector2( 12, 10 )
+texture = ExtResource( 8 )
 hframes = 17
 
 [node name="fruit" type="AnimationPlayer" parent="main/score/last_fruit"]
@@ -165,10 +178,33 @@ anims/RESET = SubResource( 1 )
 anims/motion = SubResource( 2 )
 
 [node name="score" type="Label" parent="main/score"]
-margin_left = 32.0
+margin_left = 24.0
 margin_top = 4.0
-margin_right = 104.0
+margin_right = 88.0
 margin_bottom = 28.0
 custom_fonts/font = SubResource( 3 )
+
+[node name="level_title" type="HBoxContainer" parent="."]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -160.0
+margin_top = -96.0
+margin_right = 160.0
+margin_bottom = 96.0
+size_flags_horizontal = 3
+alignment = 1
+
+[node name="text" type="Label" parent="level_title"]
+margin_left = 112.0
+margin_top = 85.0
+margin_right = 208.0
+margin_bottom = 106.0
+custom_fonts/font = SubResource( 4 )
+text = "Level0"
+script = ExtResource( 5 )
+
+[node name="animation" type="Tween" parent="level_title/text"]
 
 [connection signal="timeout" from="main/timer/Timer" to="main/timer/Timer" method="_on_Timer_timeout"]
