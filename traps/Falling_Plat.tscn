@@ -426,13 +426,11 @@ tracks/4/keys = {
 
 [node name="Falling_Plat" type="KinematicBody2D"]
 collision_layer = 16
-collision_mask = 0
 script = ExtResource( 3 )
 
 [node name="Sprite" type="Sprite" parent="."]
 texture = ExtResource( 1 )
 hframes = 4
-frame = 5
 
 [node name="collider" type="CollisionShape2D" parent="."]
 position = Vector2( 0, -2 )

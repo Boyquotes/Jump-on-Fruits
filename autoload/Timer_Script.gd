@@ -2,7 +2,7 @@ extends Timer
 
 class_name Clock
 
-export var limit_seconds = 45
+export var limit_seconds = 345
 var now_seconds = limit_seconds
 var red = Color(255,0,0)
 var white = Color(255,255,255)

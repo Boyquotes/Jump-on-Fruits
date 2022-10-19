@@ -1,4 +1,4 @@
-[gd_scene load_steps=25 format=2]
+[gd_scene load_steps=29 format=2]
 
 [ext_resource path="res://enemies/Mushroom.tscn" type="PackedScene" id=1]
 [ext_resource path="res://traps/Falling_Plat.tscn" type="PackedScene" id=2]
@@ -11,7 +11,7 @@
 [ext_resource path="res://items/banana.tscn" type="PackedScene" id=9]
 [ext_resource path="res://traps/moving_platform.tscn" type="PackedScene" id=10]
 [ext_resource path="res://items/kiwi.tscn" type="PackedScene" id=11]
-[ext_resource path="res://tileset1.tres" type="TileSet" id=12]
+[ext_resource path="res://tilesets/tileset1.tres" type="TileSet" id=12]
 [ext_resource path="res://scripts/Fallzone.gd" type="Script" id=13]
 [ext_resource path="res://Pixel Adventure 1/Free/Terrain/Seasonal Tilesets/1 - Grassland/Background parts/1 - Foreground_scenery.png" type="Texture" id=14]
 [ext_resource path="res://Pixel Adventure 1/Free/Terrain/Seasonal Tilesets/1 - Grassland/Background parts/3 - Cloud_cover_1.png" type="Texture" id=15]
@@ -20,6 +20,10 @@
 [ext_resource path="res://Pixel Adventure 1/Free/Terrain/Seasonal Tilesets/1 - Grassland/Background parts/5 - Sky_color.png" type="Texture" id=18]
 [ext_resource path="res://items/Checkpoint.tscn" type="PackedScene" id=19]
 [ext_resource path="res://levels/level_end.tscn" type="PackedScene" id=20]
+[ext_resource path="res://traps/ChainSaw.tscn" type="PackedScene" id=21]
+[ext_resource path="res://traps/Trampoline.tscn" type="PackedScene" id=22]
+[ext_resource path="res://traps/Fan.tscn" type="PackedScene" id=23]
+[ext_resource path="res://traps/RockHead.tscn" type="PackedScene" id=24]
 
 [sub_resource type="Shader" id=1]
 code = "shader_type canvas_item;
@@ -227,7 +231,36 @@ position = Vector2( 133, 77 )
 position = Vector2( 972, -155 )
 target_path = "res://levels/level0_2.tscn"
 
+[node name="ChainSaw2" parent="." instance=ExtResource( 21 )]
+position = Vector2( 230, -96 )
+rotation = 0.31765
+
+[node name="Trampoline" parent="." instance=ExtResource( 22 )]
+position = Vector2( 238, 46 )
+rotation = 4.71239
+power = 1100
+
+[node name="ChainSaw" parent="." instance=ExtResource( 21 )]
+position = Vector2( 404, -29 )
+rotation = -0.715585
+
+[node name="chain" parent="ChainSaw" index="1"]
+margin_right = 252.0
+
+[node name="Trampoline2" parent="." instance=ExtResource( 22 )]
+position = Vector2( 182, 20 )
+
+[node name="RockHead" parent="." instance=ExtResource( 24 )]
+position = Vector2( 422, 77 )
+
+[node name="Fan" parent="." instance=ExtResource( 23 )]
+position = Vector2( 581, 89 )
+rotation = 1.5708
+power = -40
+
 [node name="Player" parent="." instance=ExtResource( 5 )]
-position = Vector2( 94, -148 )
+position = Vector2( 272, 21 )
 
 [connection signal="body_entered" from="map/Fallzone" to="map/Fallzone" method="_on_Fallzone_body_entered"]
+
+[editable path="ChainSaw"]

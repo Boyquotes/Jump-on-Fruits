@@ -16,11 +16,13 @@ func _process(_delta):
 		text[text.find("0")] = "" 
 	text_score.text = text
 
-func reset_procedures():
+func reset_procedures(reload):
 	Global._update_nodes()
 	reset_texture()
 	reset_timer()
-	reset_title()
+	reset_lifes()
+	if !reload:
+		reset_title()
 	
 func reset_texture():
 	texture.texture = reset
@@ -32,4 +34,8 @@ func reset_timer():
 func reset_title():
 	var title = get_node("/root/Hud/level_title/text")
 	title.start_tween()
+
+func reset_lifes():
+	var lifes = get_node("/root/Hud/main/life_holder")
+	lifes._reset_scale()
 

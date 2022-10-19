@@ -16,7 +16,5 @@ func _update_nodes():
 
 func _reset_current():
 	Transition.change_scene("", false)
-	Hud.reset_texture()
-	Hud.reset_timer()
 	fruits = 0
 	_update_nodes()

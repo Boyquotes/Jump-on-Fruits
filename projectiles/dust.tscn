@@ -1,0 +1,38 @@
+[gd_scene load_steps=8 format=2]
+
+[ext_resource path="res://scripts/dust.gd" type="Script" id=1]
+[ext_resource path="res://Pixel Adventure 1/Free/Other/Dust Particle.png" type="Texture" id=2]
+
+[sub_resource type="Gradient" id=17]
+colors = PoolColorArray( 0.939453, 0.870861, 0.620186, 1, 1, 1, 1, 0 )
+
+[sub_resource type="GradientTexture" id=14]
+gradient = SubResource( 17 )
+
+[sub_resource type="Curve" id=18]
+_data = [ Vector2( 0, 0.494318 ), 0.0, 0.0, 0, 0, Vector2( 1, 1 ), 0.0, 0.0, 0, 0 ]
+
+[sub_resource type="CurveTexture" id=16]
+curve = SubResource( 18 )
+
+[sub_resource type="ParticlesMaterial" id=19]
+flag_disable_z = true
+direction = Vector3( -1, 0, 0 )
+spread = 0.0
+gravity = Vector3( 0, -20, 0 )
+initial_velocity = 23.0
+orbit_velocity = 0.0
+orbit_velocity_random = 0.0
+scale_curve = SubResource( 16 )
+color_ramp = SubResource( 14 )
+
+[node name="dust_particle" type="Node2D"]
+script = ExtResource( 1 )
+
+[node name="dust" type="Particles2D" parent="."]
+emitting = false
+amount = 1
+lifetime = 0.7
+one_shot = true
+process_material = SubResource( 19 )
+texture = ExtResource( 2 )

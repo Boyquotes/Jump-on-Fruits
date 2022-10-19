@@ -67,3 +67,6 @@ func _on_hurtbox_body_entered(body):
 	if life == 0:
 		queue_free()
 	hitted = false
+
+func get_velocity():
+	return velocity

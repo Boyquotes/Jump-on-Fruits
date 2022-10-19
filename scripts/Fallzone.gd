@@ -8,6 +8,11 @@ func _ready():
 
 func _on_Fallzone_body_entered(body):
 	if body.name == "Player":
-		body.dies()
+		body._on_hurtbox_body_entered(self)
+	else:
+		body.queue_free()
 		
 	
+
+
+

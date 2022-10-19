@@ -23,14 +23,13 @@ func _process(_delta):
 		
 		#Atualiza a cena atual
 		get_tree().set_current_scene(current_scene)
-		
+		Hud.reset_procedures(false)
 		#pós loading
-		fade_out()
+		fade_out(0)
 		set_process(false)
 		loader = null
 
 func change_scene(path, new):
-	fx.remove_all()
 	
 	var delay 
 	
@@ -38,9 +37,8 @@ func change_scene(path, new):
 		delay = 2
 	else: 
 		delay = 0
-		
-	fx.interpolate_property(get_node("overlay"), "animation_progress", 0, 1, duration_time/2, Tween.TRANS_QUAD, Tween.EASE_IN_OUT, delay)
-	fx.start()
+	
+	fade_in(delay)
 	yield(fx, "tween_completed")
 	
 	if path!="":
@@ -49,13 +47,23 @@ func change_scene(path, new):
 		#assert(get_tree().change_scene(path) == OK)
 	else:
 		get_tree().reload_current_scene()
-		fade_out()
-		
-
-func fade_out():
+		Hud.reset_procedures(true)
+		fade_out(0)
+	
+func fade_in(delay):
 	fx.remove_all()
-	fx.interpolate_property(get_node("overlay"), "animation_progress", 1, 0, duration_time/2, Tween.TRANS_QUAD, Tween.EASE_IN_OUT, 0)
+	fx.interpolate_property(get_node("overlay"), "animation_progress", 0, 1, duration_time/2, Tween.TRANS_QUAD, Tween.EASE_IN_OUT, delay)
 	fx.start()
-	Hud.reset_procedures()
+
+func fade_out(delay):
+	fx.remove_all()
+	fx.interpolate_property(get_node("overlay"), "animation_progress", 1, 0, duration_time/2, Tween.TRANS_QUAD, Tween.EASE_IN_OUT, delay)
+	fx.start()
+
+func make_transition(delay):
+	fade_in(delay)
+	yield(fx, "tween_completed")
+	fade_out(delay)
+	
 
 

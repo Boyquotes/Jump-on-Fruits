@@ -1,4 +1,4 @@
-[gd_scene load_steps=13 format=2]
+[gd_scene load_steps=12 format=2]
 
 [ext_resource path="res://fonts/Silkscreen-Regular.ttf" type="DynamicFontData" id=1]
 [ext_resource path="res://autoload/HUD.gd" type="Script" id=2]
@@ -7,7 +7,6 @@
 [ext_resource path="res://autoload/level_display.gd" type="Script" id=5]
 [ext_resource path="res://Pixel Adventure 1/Free/Other/heart.png" type="Texture" id=6]
 [ext_resource path="res://Pixel Adventure 1/Free/Other/clock.png" type="Texture" id=7]
-[ext_resource path="res://Pixel Adventure 1/Free/Items/Fruits/Apple.png" type="Texture" id=8]
 
 [sub_resource type="DynamicFont" id=3]
 outline_size = 1
@@ -51,7 +50,7 @@ tracks/2/keys = {
 "times": PoolRealArray( 0 ),
 "transitions": PoolRealArray( 1 ),
 "update": 0,
-"values": [ ExtResource( 8 ) ]
+"values": [ null ]
 }
 
 [sub_resource type="Animation" id=2]
@@ -114,13 +113,13 @@ margin_bottom = 32.0
 size_flags_horizontal = 3
 script = ExtResource( 4 )
 
-[node name="lifes" type="TextureRect" parent="main/life_holder"]
-anchor_top = 0.5
-anchor_bottom = 0.5
-margin_top = -11.5
+[node name="life_box" type="HBoxContainer" parent="main/life_holder"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+
+[node name="lifes" type="TextureRect" parent="main/life_holder/life_box"]
 margin_right = 32.0
-margin_bottom = 21.5
-rect_scale = Vector2( 0.7, 0.7 )
+margin_bottom = 33.0
 texture = ExtResource( 6 )
 stretch_mode = 2
 
@@ -167,7 +166,6 @@ margin_bottom = 10.0
 
 [node name="sprite" type="Sprite" parent="main/score/last_fruit"]
 position = Vector2( 12, 10 )
-texture = ExtResource( 8 )
 hframes = 17
 
 [node name="fruit" type="AnimationPlayer" parent="main/score/last_fruit"]
