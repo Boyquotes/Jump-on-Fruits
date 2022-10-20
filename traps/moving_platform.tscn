@@ -1,15 +1,14 @@
-[gd_scene load_steps=6 format=2]
+[gd_scene load_steps=8 format=2]
 
-[ext_resource path="res://Pixel Adventure 1/Free/Traps/Platforms/Brown On (32x8).png" type="Texture" id=1]
-[ext_resource path="res://scripts/moving_platform.gd" type="Script" id=2]
+[ext_resource path="res://Pixel Adventure 1/Free/Traps/Platforms/Chain.png" type="Texture" id=1]
+[ext_resource path="res://Pixel Adventure 1/Free/Traps/Platforms/Brown Off.png" type="Texture" id=2]
+[ext_resource path="res://Pixel Adventure 1/Free/Traps/Platforms/Brown On (32x8).png" type="Texture" id=3]
+[ext_resource path="res://scripts/moving_platform.gd" type="Script" id=4]
 
-[sub_resource type="RectangleShape2D" id=1]
-extents = Vector2( 16, 2.5 )
-
-[sub_resource type="Animation" id=3]
+[sub_resource type="Animation" id=5]
 length = 0.001
 tracks/0/type = "value"
-tracks/0/path = NodePath("Sprite:hframes")
+tracks/0/path = NodePath(".:texture")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/imported = false
@@ -18,39 +17,40 @@ tracks/0/keys = {
 "times": PoolRealArray( 0 ),
 "transitions": PoolRealArray( 1 ),
 "update": 0,
-"values": [ 8 ]
+"values": [ ExtResource( 2 ) ]
 }
 tracks/1/type = "value"
-tracks/1/path = NodePath("Sprite:frame")
+tracks/1/path = NodePath(".:hframes")
 tracks/1/interp = 1
 tracks/1/loop_wrap = true
 tracks/1/imported = false
 tracks/1/enabled = true
 tracks/1/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 0,
+"values": [ 1 ]
+}
+tracks/2/type = "value"
+tracks/2/path = NodePath(".:frame")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/keys = {
 "times": PoolRealArray( 0 ),
 "transitions": PoolRealArray( 1 ),
 "update": 0,
 "values": [ 0 ]
 }
-tracks/2/type = "value"
-tracks/2/path = NodePath("Sprite:texture")
-tracks/2/interp = 1
-tracks/2/loop_wrap = true
-tracks/2/imported = false
-tracks/2/enabled = true
-tracks/2/keys = {
-"times": PoolRealArray( 0 ),
-"transitions": PoolRealArray( 1 ),
-"update": 0,
-"values": [ ExtResource( 1 ) ]
-}
 
-[sub_resource type="Animation" id=2]
-resource_name = "moving"
-length = 0.85
+[sub_resource type="Animation" id=6]
+resource_name = "on"
+length = 1.2
 loop = true
+step = 0.15
 tracks/0/type = "value"
-tracks/0/path = NodePath("Sprite:texture")
+tracks/0/path = NodePath(".:texture")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/imported = false
@@ -59,10 +59,10 @@ tracks/0/keys = {
 "times": PoolRealArray( 0 ),
 "transitions": PoolRealArray( 1 ),
 "update": 1,
-"values": [ ExtResource( 1 ) ]
+"values": [ ExtResource( 3 ) ]
 }
 tracks/1/type = "value"
-tracks/1/path = NodePath("Sprite:hframes")
+tracks/1/path = NodePath(".:hframes")
 tracks/1/interp = 1
 tracks/1/loop_wrap = true
 tracks/1/imported = false
@@ -74,41 +74,49 @@ tracks/1/keys = {
 "values": [ 8 ]
 }
 tracks/2/type = "value"
-tracks/2/path = NodePath("Sprite:frame")
+tracks/2/path = NodePath(".:frame")
 tracks/2/interp = 1
 tracks/2/loop_wrap = true
 tracks/2/imported = false
 tracks/2/enabled = true
 tracks/2/keys = {
-"times": PoolRealArray( 0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7 ),
+"times": PoolRealArray( 0, 0.15, 0.3, 0.45, 0.6, 0.75, 0.9, 1.05 ),
 "transitions": PoolRealArray( 1, 1, 1, 1, 1, 1, 1, 1 ),
 "update": 1,
 "values": [ 0, 1, 2, 3, 4, 5, 6, 7 ]
 }
 
+[sub_resource type="RectangleShape2D" id=7]
+extents = Vector2( 16, 2.5 )
+
 [node name="moving_platform" type="Node2D"]
-script = ExtResource( 2 )
+script = ExtResource( 4 )
 
-[node name="Platform" type="KinematicBody2D" parent="."]
-collision_layer = 16
-collision_mask = 9
-motion/sync_to_physics = true
-
-[node name="Sprite" type="Sprite" parent="Platform"]
-texture = ExtResource( 1 )
-hframes = 8
-
-[node name="Collision" type="CollisionShape2D" parent="Platform"]
-position = Vector2( 0, 0.5 )
-shape = SubResource( 1 )
-one_way_collision = true
-
-[node name="AnimationPlayer" type="AnimationPlayer" parent="Platform"]
-autoplay = "moving"
-anims/RESET = SubResource( 3 )
-anims/moving = SubResource( 2 )
-
-[node name="Tween" type="Tween" parent="."]
+[node name="movement" type="Tween" parent="."]
 repeat = true
-playback_process_mode = 0
 playback/repeat = true
+
+[node name="chain" type="TextureRect" parent="."]
+margin_top = -4.0
+margin_right = 138.0
+margin_bottom = 4.0
+texture = ExtResource( 1 )
+stretch_mode = 2
+
+[node name="platform" type="KinematicBody2D" parent="."]
+collision_layer = 64
+collision_mask = 0
+
+[node name="sprite" type="Sprite" parent="platform"]
+texture = ExtResource( 2 )
+
+[node name="animation" type="AnimationPlayer" parent="platform"]
+root_node = NodePath("../sprite")
+autoplay = "on"
+anims/RESET = SubResource( 5 )
+anims/on = SubResource( 6 )
+
+[node name="hitbox" type="CollisionShape2D" parent="platform"]
+position = Vector2( 0, 0.5 )
+shape = SubResource( 7 )
+one_way_collision = true

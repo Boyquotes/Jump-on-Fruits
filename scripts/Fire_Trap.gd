@@ -1,6 +1,6 @@
-extends KinematicBody2D
+extends "res://scripts/Interactive_Trap.gd"
 
-export var on = false
+export var auto = false
 
 func _ready():
 	pass
@@ -10,8 +10,8 @@ func _physics_process(delta):
 
 func check_animations():
 	if on:
-		$animacao.play("fire")
-		on = false
+		toggle()
+		$animacao.play("hit")
 
 func _on_animation_finished(anim_name):
 	if anim_name == "fire":

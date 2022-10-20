@@ -14,7 +14,7 @@
 [ext_resource path="res://items/melon.tscn" type="PackedScene" id=12]
 [ext_resource path="res://traps/Falling_Plat.tscn" type="PackedScene" id=13]
 [ext_resource path="res://items/kiwi.tscn" type="PackedScene" id=14]
-[ext_resource path="res://tilesets/tileset1.tres" type="TileSet" id=15]
+[ext_resource path="res://tilesets/solid1.tres" type="TileSet" id=15]
 [ext_resource path="res://Pixel Adventure 1/Free/Terrain/Seasonal Tilesets/1 - Grassland/Background parts/4 - Cloud_cover_2.png" type="Texture" id=16]
 [ext_resource path="res://Pixel Adventure 1/Free/Terrain/Seasonal Tilesets/1 - Grassland/Background parts/3 - Cloud_cover_1.png" type="Texture" id=17]
 [ext_resource path="res://Pixel Adventure 1/Free/Terrain/Seasonal Tilesets/1 - Grassland/Background parts/5 - Sky_color.png" type="Texture" id=18]
@@ -227,11 +227,6 @@ position = Vector2( 133, 77 )
 position = Vector2( 972, -155 )
 
 [node name="Player" parent="." instance=ExtResource( 7 )]
-position = Vector2( 94, -148 )
-
-[node name="MainCamera" parent="Player" index="4"]
-limit_top = -100
+position = Vector2( 166, 70 )
 
 [connection signal="body_entered" from="map/Fallzone" to="map/Fallzone" method="_on_Fallzone_body_entered"]
-
-[editable path="Player"]

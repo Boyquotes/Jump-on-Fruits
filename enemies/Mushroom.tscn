@@ -171,7 +171,7 @@ height = 14.0001
 
 [node name="Mushroom" type="KinematicBody2D"]
 collision_layer = 8
-collision_mask = 35
+collision_mask = 99
 script = ExtResource( 4 )
 
 [node name="sprite" type="Sprite" parent="."]
@@ -195,7 +195,7 @@ collision_mask = 2
 position = Vector2( -9, 13 )
 enabled = true
 cast_to = Vector2( 0, 8 )
-collision_mask = 2
+collision_mask = 66
 collide_with_areas = true
 
 [node name="hitbox" type="CollisionShape2D" parent="."]
@@ -210,7 +210,7 @@ position = Vector2( 0, -6 )
 position = Vector2( 0, 8 )
 enabled = true
 cast_to = Vector2( 0, 14 )
-collision_mask = 2
+collision_mask = 66
 
 [connection signal="animation_finished" from="anim" to="." method="_on_anim_animation_finished"]
 [connection signal="body_entered" from="hurtbox" to="." method="_on_hurtbox_body_entered"]

@@ -2,15 +2,15 @@
 
 importer="texture"
 type="StreamTexture"
-path="res://.import/Brown Off.png-e58d53d63604541edb77db7cc2501ef7.stex"
+path="res://.import/heart.png-3d637fcef1835dcf66aa20dddb432ea2.stex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Pixel Adventure 1/Free/Traps/Platforms/Brown Off.png"
-dest_files=[ "res://.import/Brown Off.png-e58d53d63604541edb77db7cc2501ef7.stex" ]
+source_file="res://assets_by_yago/heart.png"
+dest_files=[ "res://.import/heart.png-3d637fcef1835dcf66aa20dddb432ea2.stex" ]
 
 [params]
 

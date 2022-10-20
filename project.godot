@@ -26,7 +26,7 @@ _global_script_class_icons={
 
 [application]
 
-config/name="Pixel Adventure"
+config/name="Jump_on_Fruits"
 run/main_scene="res://levels/level0.tscn"
 config/icon="res://icon.png"
 
@@ -125,6 +125,7 @@ go_down={
 2d_physics/layer_4="enemy"
 2d_physics/layer_5="traps"
 2d_physics/layer_6="player_damage_box"
+2d_physics/layer_7="platforms"
 
 [physics]
 

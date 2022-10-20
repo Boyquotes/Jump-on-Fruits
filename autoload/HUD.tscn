@@ -5,8 +5,8 @@
 [ext_resource path="res://autoload/Timer_Script.gd" type="Script" id=3]
 [ext_resource path="res://autoload/life_holder.gd" type="Script" id=4]
 [ext_resource path="res://autoload/level_display.gd" type="Script" id=5]
-[ext_resource path="res://Pixel Adventure 1/Free/Other/heart.png" type="Texture" id=6]
-[ext_resource path="res://Pixel Adventure 1/Free/Other/clock.png" type="Texture" id=7]
+[ext_resource path="res://Pixel Adventure 1/Free/Other/clock.png" type="Texture" id=6]
+[ext_resource path="res://assets_by_yago/heart.png" type="Texture" id=7]
 
 [sub_resource type="DynamicFont" id=3]
 outline_size = 1
@@ -114,13 +114,16 @@ size_flags_horizontal = 3
 script = ExtResource( 4 )
 
 [node name="life_box" type="HBoxContainer" parent="main/life_holder"]
-anchor_right = 1.0
-anchor_bottom = 1.0
+margin_left = 10.0
+margin_top = 8.0
+margin_right = 141.0
+margin_bottom = 40.0
+rect_scale = Vector2( 0.7, 0.7 )
 
 [node name="lifes" type="TextureRect" parent="main/life_holder/life_box"]
 margin_right = 32.0
-margin_bottom = 33.0
-texture = ExtResource( 6 )
+margin_bottom = 32.0
+texture = ExtResource( 7 )
 stretch_mode = 2
 
 [node name="animation" type="Tween" parent="main/life_holder"]
@@ -137,14 +140,16 @@ anchor_bottom = 0.5
 margin_top = -12.0
 margin_right = 24.0
 margin_bottom = 12.0
-texture = ExtResource( 7 )
+texture = ExtResource( 6 )
 expand = true
 
 [node name="clock" type="Label" parent="main/timer"]
-margin_left = 32.0
-margin_top = 4.0
-margin_right = 88.0
-margin_bottom = 28.0
+anchor_top = 0.5
+anchor_bottom = 0.5
+margin_left = 24.0
+margin_top = -12.0
+margin_right = 105.0
+margin_bottom = 19.0
 custom_fonts/font = SubResource( 3 )
 text = "00:00"
 
@@ -181,6 +186,7 @@ margin_top = 4.0
 margin_right = 88.0
 margin_bottom = 28.0
 custom_fonts/font = SubResource( 3 )
+text = "00000"
 
 [node name="level_title" type="HBoxContainer" parent="."]
 anchor_left = 0.5

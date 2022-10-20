@@ -82,8 +82,8 @@ func _on_Timer_timeout():
 func _check_terrain():
 	#Checa se tem terreno dentro do alcance para colidir
 	for raycast in $ray_casts.get_children():
-		raycast.set_collision_mask_bit(0, false)
 		raycast.force_raycast_update()
+		raycast.set_collision_mask_bit(0, false)
 		raycast.enabled = true if raycast.is_colliding() else false
 		raycast.set_collision_mask_bit(0, true)
 

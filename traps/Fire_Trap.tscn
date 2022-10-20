@@ -319,7 +319,8 @@ tracks/5/keys = {
 }
 
 [node name="Fire_Trap" type="KinematicBody2D"]
-collision_layer = 16
+collision_layer = 18
+collision_mask = 0
 script = ExtResource( 4 )
 
 [node name="hitbox" type="CollisionShape2D" parent="."]
@@ -331,7 +332,7 @@ position = Vector2( 0, -6 )
 texture = ExtResource( 3 )
 
 [node name="active_area" type="KinematicBody2D" parent="."]
-collision_layer = 16
+collision_layer = 18
 script = ExtResource( 5 )
 
 [node name="button" type="CollisionShape2D" parent="active_area"]

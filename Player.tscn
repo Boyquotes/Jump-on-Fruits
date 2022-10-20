@@ -463,8 +463,7 @@ tracks/3/keys = {
 extents = Vector2( 10.5, 9 )
 
 [node name="Player" type="KinematicBody2D"]
-position = Vector2( 46, -116 )
-collision_mask = 14
+collision_mask = 78
 script = ExtResource( 4 )
 
 [node name="HitBox" type="CollisionShape2D" parent="."]
@@ -492,20 +491,20 @@ anims/wall_jump = SubResource( 11 )
 [node name="RayCast2D" type="RayCast2D" parent="RayCasts_ground"]
 position = Vector2( -6, 6 )
 enabled = true
-cast_to = Vector2( 0, 8 )
-collision_mask = 26
+cast_to = Vector2( 0, 7 )
+collision_mask = 66
 
 [node name="RayCast2D2" type="RayCast2D" parent="RayCasts_ground"]
 position = Vector2( 4, 6 )
 enabled = true
-cast_to = Vector2( 0, 8 )
-collision_mask = 26
+cast_to = Vector2( 0, 7 )
+collision_mask = 66
 
 [node name="RayCast2D3" type="RayCast2D" parent="RayCasts_ground"]
 position = Vector2( -1, 5 )
 enabled = true
-cast_to = Vector2( 0, 9 )
-collision_mask = 26
+cast_to = Vector2( 0, 8 )
+collision_mask = 66
 
 [node name="MainCamera" type="Camera2D" parent="."]
 position = Vector2( -1, -1 )

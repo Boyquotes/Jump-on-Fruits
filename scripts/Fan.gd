@@ -1,13 +1,12 @@
-extends KinematicBody2D
-export var power = 10
-export var on = true
+extends "res://scripts/Interactive_Trap.gd"
 
+export var power = 10
 var bodies_in = []
 var current_rotation
 onready var area = $wind/area.position
 
 func _ready():
-	pass
+	on = true
 	
 func _physics_process(delta):
 	if on:

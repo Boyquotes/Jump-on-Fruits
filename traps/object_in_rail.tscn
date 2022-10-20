@@ -3,7 +3,7 @@
 [ext_resource path="res://Pixel Adventure 1/Free/Traps/Saw/Chain.png" type="Texture" id=1]
 [ext_resource path="res://Pixel Adventure 1/Free/Traps/Saw/Off.png" type="Texture" id=2]
 [ext_resource path="res://Pixel Adventure 1/Free/Traps/Saw/On (38x38).png" type="Texture" id=3]
-[ext_resource path="res://scripts/ChainSaw.gd" type="Script" id=4]
+[ext_resource path="res://scripts/object_in_rail.gd" type="Script" id=4]
 
 [sub_resource type="Animation" id=5]
 length = 0.001
@@ -89,7 +89,7 @@ tracks/2/keys = {
 [sub_resource type="CircleShape2D" id=4]
 radius = 20.0
 
-[node name="ChainSaw" type="Node2D"]
+[node name="Object_In_Rail" type="Node2D"]
 script = ExtResource( 4 )
 
 [node name="movement" type="Tween" parent="."]
@@ -103,18 +103,18 @@ margin_bottom = 4.0
 texture = ExtResource( 1 )
 stretch_mode = 2
 
-[node name="saw" type="KinematicBody2D" parent="."]
+[node name="object" type="KinematicBody2D" parent="."]
 collision_layer = 16
 collision_mask = 32
 
-[node name="sprite" type="Sprite" parent="saw"]
+[node name="sprite" type="Sprite" parent="object"]
 texture = ExtResource( 2 )
 
-[node name="animation" type="AnimationPlayer" parent="saw"]
+[node name="animation" type="AnimationPlayer" parent="object"]
 root_node = NodePath("../sprite")
 autoplay = "on"
 anims/RESET = SubResource( 5 )
 anims/on = SubResource( 6 )
 
-[node name="hitbox" type="CollisionShape2D" parent="saw"]
+[node name="hitbox" type="CollisionShape2D" parent="object"]
 shape = SubResource( 4 )

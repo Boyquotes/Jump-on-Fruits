@@ -6,7 +6,7 @@ var up = Vector2.UP
 var stop = false;
 var life = 3
 var max_life = 3
-var move_speed = 100
+export var move_speed = 100
 const body_gravity = 1200
 var gravity = body_gravity
 var jump_force = 720
@@ -57,10 +57,8 @@ func _physics_process(delta:float) -> void:
 func move_input():
 	if(!stop):
 		dir = (int(Input.is_action_pressed("move_right")) - int(Input.is_action_pressed("move_left")))
-	if Input.is_action_pressed("go_down") and Input.is_action_pressed("jump"):
-		#drop-through
-		pass
-		
+	if Input.is_action_pressed("go_down") and Input.is_action_pressed("jump") and is_grounded():
+		position.y +=4
 		
 func _input(event: InputEvent) -> void:
 	if !hitted:
@@ -82,10 +80,10 @@ func grabing_wall():
 		if !raycast.is_colliding():
 			continue
 			
-		$Texture.scale.x = sign(raycast.cast_to.x)
-		grab_dir = sign(raycast.cast_to.x)
-		
 		if !is_grounded():
+			
+			$Texture.scale.x = sign(raycast.cast_to.x)
+			grab_dir = sign(raycast.cast_to.x)
 			speed[1] *= 0.75
 			jumps = 1
 			return true
@@ -131,36 +129,29 @@ func is_grounded():
 	for raycast in ground_raycasts.get_children():
 		if raycast.is_colliding() && speed[1] == 0:
 			jumps = 1
-			last_ground = position
 			return true
-	
 	return false
 	
 func apply_gravity(delta):
 	speed[1] += gravity*delta
 
 func _on_hurtbox_body_entered(body):
+	var specials = ["saw", "Fallzone"]
+	var immunity_frames = 1
 	life-=1
 	emit_signal("change_life", life, max_life)
 	if life<=0:
 		dies()
 		return false
-		
-	var specials = ["saw", "Fallzone"]
 	hitted = true
-	on_knockback(body)
-	
 	if specials.has(body.name) and !is_grounded() and life>0:
-		Transition.make_transition(0)
-		get_node("hurtbox/shape").set_deferred("disabled", true)
-		freezed = true
-		yield(get_tree().create_timer(2), "timeout")
-		freezed = false
-		get_node("hurtbox/shape").set_deferred("disabled", false)
-		position = last_ground if Global.last_checkpoint==null else Global.last_checkpoint
+		respawn_after_hit(body)
+		immunity_frames = 1.5
+	else: 
+		on_knockback(body)
 	#immunity frames	
 	get_node("hurtbox/shape").set_deferred("disabled", true)
-	yield(get_tree().create_timer(0.5),"timeout")
+	yield(get_tree().create_timer(immunity_frames),"timeout")
 	get_node("hurtbox/shape").set_deferred("disabled", false)
 	hitted = false
 	
@@ -172,8 +163,8 @@ func on_knockback(colisor):
 		else:
 			knockback_dir = -1
 		
-		speed[0] = knockback_dir*knockback_int
-		speed[1] = knockback_yint
+	speed[0] = knockback_dir*knockback_int
+	speed[1] = knockback_yint
 	speed = move_and_slide(speed)
 	
 
@@ -182,16 +173,16 @@ func get_collisions():
 	for colliders in get_slide_count():	
 		var collider_obj = get_slide_collision(colliders)
 		#plataforma que cai
+		
 		if collider_obj!=null:
+			if collider_obj.collider is TileMap and is_grounded():
+				last_ground = position
+				
 			if collider_obj.collider.has_method("collide_with"):
 				collider_obj.collider.collide_with(collider_obj, self)
+				
+			
 		
-	
-		#if collider_obj.collider is TileMap:
-		#	var tile_pos = collider_obj.collider.world_to_map(get_node("HitBox").position)
-		#	tile_pos -= collider_obj.normal
-		#	var tile = collider_obj.collider.get_cellv(tile_pos)
-		#	print(tile)
 			
 func dies():
 	if !died:
@@ -201,6 +192,16 @@ func dies():
 		get_node("HitBox").set_deferred("disabled", true)
 		yield(get_tree().create_timer(3),"timeout")
 		Global._reset_current()
+	
+func respawn_after_hit(body):
+	Transition.make_transition(0)
+	get_node("hurtbox/shape").set_deferred("disabled", true)
+	freezed = true
+	yield(get_tree().create_timer(2), "timeout")
+	freezed = false
+	get_node("hurtbox/shape").set_deferred("disabled", false)
+	position = last_ground 
+	position.x -= 20
 		
 func checkpoint_entered():
 	Global.last_checkpoint = position
@@ -209,8 +210,8 @@ func make_dust():
 
 	var dust = dust_instance.instance()
 	dust.get_node("dust").emitting = true
-	dust.position.x =$dust_origin.global_position.x-$dust_origin.position.x*-dir
-	dust.position.y = $dust_origin.global_position.y
+	dust.position.x = position.x+$dust_origin.position.x*-dir
+	dust.position.y = position.y+$dust_origin.position.y
 	dust.scale.x = sign($Texture.scale.x)
 	
 	if grabing_wall():

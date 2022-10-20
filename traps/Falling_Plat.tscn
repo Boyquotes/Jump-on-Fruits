@@ -424,8 +424,9 @@ tracks/4/keys = {
 "values": [ 0.0, 3.0, -3.0 ]
 }
 
-[node name="Falling_Plat" type="KinematicBody2D"]
-collision_layer = 16
+[node name="falling_platform" type="KinematicBody2D"]
+collision_layer = 80
+collision_mask = 0
 script = ExtResource( 3 )
 
 [node name="Sprite" type="Sprite" parent="."]
