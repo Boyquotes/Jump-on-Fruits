@@ -129,8 +129,23 @@ tracks/2/keys = {
 "values": [ 0, 1, 2, 3, 4, 5, 6, 7 ]
 }
 
-[sub_resource type="RectangleShape2D" id=17]
-extents = Vector2( 6, 16.375 )
+[sub_resource type="Curve" id=11]
+_data = [ Vector2( 0, 0.526136 ), 0.0, 0.0, 0, 0, Vector2( 0.501805, 0.6625 ), 0.0, 0.0, 0, 0, Vector2( 1, 0 ), 0.0, 0.0, 0, 0 ]
+
+[sub_resource type="CurveTexture" id=12]
+curve = SubResource( 11 )
+
+[sub_resource type="ParticlesMaterial" id=13]
+flag_disable_z = true
+direction = Vector3( 0, 1, 0 )
+spread = 89.4
+gravity = Vector3( 0, 0, 0 )
+initial_velocity = 13.33
+orbit_velocity = 0.0
+orbit_velocity_random = 0.0
+scale = 0.15
+scale_curve = SubResource( 12 )
+color = Color( 0.956863, 0.858824, 1, 1 )
 
 [sub_resource type="Gradient" id=6]
 colors = PoolColorArray( 1, 1, 1, 1, 0.933594, 0.800781, 1, 1 )
@@ -162,23 +177,8 @@ scale = 0.02
 scale_curve = SubResource( 9 )
 color_ramp = SubResource( 7 )
 
-[sub_resource type="Curve" id=11]
-_data = [ Vector2( 0, 0.526136 ), 0.0, 0.0, 0, 0, Vector2( 0.501805, 0.6625 ), 0.0, 0.0, 0, 0, Vector2( 1, 0 ), 0.0, 0.0, 0, 0 ]
-
-[sub_resource type="CurveTexture" id=12]
-curve = SubResource( 11 )
-
-[sub_resource type="ParticlesMaterial" id=13]
-flag_disable_z = true
-direction = Vector3( 0, 1, 0 )
-spread = 89.4
-gravity = Vector3( 0, 0, 0 )
-initial_velocity = 13.33
-orbit_velocity = 0.0
-orbit_velocity_random = 0.0
-scale = 0.15
-scale_curve = SubResource( 12 )
-color = Color( 0.956863, 0.858824, 1, 1 )
+[sub_resource type="RectangleShape2D" id=17]
+extents = Vector2( 6, 16.1875 )
 
 [sub_resource type="Environment" id=18]
 background_mode = 4
@@ -216,17 +216,17 @@ joint_mode = 2
 round_precision = 16
 antialiased = true
 
-[node name="damage_area" type="Area2D" parent="."]
-position = Vector2( 0, -16 )
-
-[node name="damage" type="CollisionShape2D" parent="damage_area"]
-modulate = Color( 1, 0, 0, 1 )
-shape = SubResource( 17 )
-
 [node name="particles" type="Node2D" parent="."]
 
+[node name="start_particles" type="Particles2D" parent="particles"]
+position = Vector2( 0, -8 )
+emitting = false
+amount = 3
+explosiveness = 0.1
+process_material = SubResource( 13 )
+texture = ExtResource( 3 )
+
 [node name="laser_particles" type="Particles2D" parent="particles"]
-position = Vector2( 0, -11 )
 emitting = false
 amount = 12
 lifetime = 1.2
@@ -242,17 +242,21 @@ explosiveness = 0.1
 process_material = SubResource( 13 )
 texture = ExtResource( 3 )
 
-[node name="start_particles" type="Particles2D" parent="particles"]
-position = Vector2( 0, -7 )
-emitting = false
-explosiveness = 0.1
-process_material = SubResource( 13 )
-texture = ExtResource( 3 )
-
-[node name="limit" type="RayCast2D" parent="."]
+[node name="collision_detector" type="RayCast2D" parent="."]
 enabled = true
 cast_to = Vector2( 0, -35 )
 collision_mask = 2
+
+[node name="laser_end" type="Position2D" parent="."]
+position = Vector2( 0, -33 )
+
+[node name="damage_area" type="Area2D" parent="."]
+position = Vector2( 0, -17 )
+
+[node name="damage" type="CollisionShape2D" parent="damage_area"]
+modulate = Color( 1, 0, 0, 1 )
+position = Vector2( 0, 0.1875 )
+shape = SubResource( 17 )
 
 [node name="Tween" type="Tween" parent="."]
 

@@ -5,65 +5,65 @@ var laser_speed = 300
 var destination_cord = Vector2.ZERO
 var laser_width = 0
 var in_range = false
+var emitting = false
+
+onready var collision_raycast = get_node("collision_detector")
+onready var laser_end = get_node("laser_end")
 onready var laser = get_node("laser")
-onready var destination_point = laser.get_point_count()-1
+onready var last_point = laser.get_point_count()-1
 
 
 
 func _ready():
-	$limit.cast_to.x = 0
 	laser.width = laser_width
-	if on:
-		in_range = true
-		open_laser()
+	collision_raycast.cast_to.x = 0
 	
 
 func _physics_process(delta):
 	laser.width = laser_width
-	
-	
-	if $limit.is_colliding():
-	
-		$limit.force_raycast_update()
-		destination_cord = $limit.get_collision_point()
-		
-		
-		laser.set_point_position(0, Vector2(0,0))
-		destination_cord.y = sign($limit.cast_to.y)*(destination_cord.y)
-		laser.set_point_position(destination_point, Vector2(0,destination_cord.y*2))
+	check_collision()
+	update_ray()
+	if on:
+		if !in_range and emitting:
+			close_laser()
 			
-		$particles/laser_particles.position.y = destination_cord.y/2
-		$particles/laser_particles.process_material.emission_box_extents.y = destination_cord.y/2
-			
-		$particles/wall_particles.position.y = destination_cord.y*2
-			
-		$damage_area.position.y = destination_cord.y
-		$damage_area/damage.shape.extents.y = destination_cord.y
+		elif in_range and !emitting:
+			open_laser()
+	
+func check_collision():
+	if collision_raycast.is_colliding():
+		collision_raycast.force_raycast_update()
+		laser_end.global_position = collision_raycast.get_collision_point()	
 		in_range = true
-		print($limit.get_collision_point())
-		
 	else:
 		in_range = false
-		
+
+func update_ray():
+	$damage_area.position.y = laser_end.position.y/2
+	$damage_area/damage.shape.extents.y = laser_end.position.y/2
+	laser.set_point_position(last_point, laser_end.position)
+	$particles/wall_particles.position = laser_end.position
+	$particles/laser_particles.position.y = laser_end.position.y/2
+	$particles/laser_particles.process_material.emission_box_extents.y = laser_end.position.y/2
 
 func open_laser():
+	emitting = true
 	$Tween.remove_all()
-	$Tween.interpolate_property(self, "laser_width", 0, 12, 1,Tween.TRANS_LINEAR, Tween.EASE_IN_OUT, 0)
+	$Tween.interpolate_property(self, "laser_width", 0, 12, 0.2,Tween.TRANS_LINEAR, Tween.EASE_IN_OUT, 0)
 	$Tween.start()
-	if on and in_range:
-		for particle in $particles.get_children():
-			particle.emitting = true
+	
+	for particle in $particles.get_children():
+		particle.emitting = true
+		
 	$damage_area/damage.set_deferred("disabled", false)
 	yield($Tween, "tween_completed")
 	$AnimationPlayer.play("active")
-	on = true
 	
-		
 	
-
 func close_laser():
+	emitting = false
 	$Tween.remove_all()
-	$Tween.interpolate_property(self, "laser_width", 12, 0, 1,Tween.TRANS_LINEAR, Tween.EASE_IN_OUT, 0)
+	$Tween.interpolate_property(self, "laser_width", 12, 0, 0.2,Tween.TRANS_LINEAR, Tween.EASE_IN_OUT, 0)
 	$Tween.start()
 	
 	for particle in $particles.get_children():
@@ -73,20 +73,23 @@ func close_laser():
 	yield($Tween, "tween_completed")
 	$AnimationPlayer.play("idle")
 	
-	on = false
-	
-		
 	$Tween.remove_all()
+
 
 func toggle():
 	on = !on
-	if on:
-		open_laser()
+	if in_range:
+		if on and !emitting:
+			open_laser()
+			
+		elif !on and emitting:
+			close_laser()
 	else:
-		close_laser()
+		on = false
 
 
 func _on_damage_area_body_entered(body):
 	if in_range and on:
 		if body.has_method("dies"):
-			body.dies()
+			if !body.hitted:
+				body.dies()

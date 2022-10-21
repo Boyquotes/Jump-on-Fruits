@@ -190,6 +190,16 @@ curve = SubResource( 3 )
 [node name="follow" parent="path_platform/path" index="0"]
 position = Vector2( 0, 0 )
 
+[node name="Railgun2" parent="path_platform/path/follow/platform" index="3" instance=ExtResource( 17 )]
+position = Vector2( 0, 11 )
+rotation = 3.14159
+
+[node name="collision_detector" parent="path_platform/path/follow/platform/Railgun2" index="5"]
+cast_to = Vector2( -1, -179 )
+
+[node name="damage" parent="path_platform/path/follow/platform/Railgun2/damage_area" index="0"]
+modulate = Color( 0.945098, 0.768627, 0.768627, 1 )
+
 [node name="button2" parent="." instance=ExtResource( 11 )]
 position = Vector2( 2364, -4 )
 path = NodePath("../controller")
@@ -246,31 +256,13 @@ auto = true
 
 [node name="button3" parent="." instance=ExtResource( 11 )]
 position = Vector2( 1786, 50 )
-path = NodePath("../Railgun2")
+path = NodePath("../path_platform/path/follow/platform/Railgun2")
 
 [node name="Player" parent="." instance=ExtResource( 2 )]
 position = Vector2( 1722, -28 )
 
 [node name="MainCamera" parent="Player" index="4"]
 limit_right = 5000
-
-[node name="Railgun2" parent="." instance=ExtResource( 17 )]
-position = Vector2( 1818, -10 )
-rotation = -3.14159
-
-[node name="AnimationPlayer" parent="Railgun2" index="2"]
-root_node = NodePath("../../Railgun2")
-
-[node name="limit" parent="Railgun2" index="6"]
-cast_to = Vector2( 0, -204 )
-
-[node name="Railgun" parent="." instance=ExtResource( 17 )]
-position = Vector2( 1864, 46 )
-rotation = 1.5708
-on = true
-
-[node name="limit" parent="Railgun" index="6"]
-cast_to = Vector2( -3.8147e-06, -94 )
 
 [editable path="TileMap/Fallzone"]
 [editable path="moving_platform"]
@@ -284,7 +276,6 @@ cast_to = Vector2( -3.8147e-06, -94 )
 [editable path="Spiked_Ball2"]
 [editable path="Spiked_Ball3"]
 [editable path="path_platform"]
+[editable path="path_platform/path/follow/platform/Railgun2"]
 [editable path="controller/ChainSaw6"]
 [editable path="Player"]
-[editable path="Railgun2"]
-[editable path="Railgun"]
