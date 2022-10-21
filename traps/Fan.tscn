@@ -149,7 +149,7 @@ orbit_velocity_random = 0.0
 scale = 1.3
 scale_random = 0.57
 
-[node name="Fan" type="KinematicBody2D"]
+[node name="Fan" type="StaticBody2D"]
 collision_layer = 18
 collision_mask = 0
 script = ExtResource( 3 )

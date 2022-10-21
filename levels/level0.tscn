@@ -1,4 +1,4 @@
-[gd_scene load_steps=31 format=2]
+[gd_scene load_steps=32 format=2]
 
 [ext_resource path="res://enemies/Mushroom.tscn" type="PackedScene" id=1]
 [ext_resource path="res://traps/Falling_Plat.tscn" type="PackedScene" id=2]
@@ -26,6 +26,7 @@
 [ext_resource path="res://traps/RockHead.tscn" type="PackedScene" id=24]
 [ext_resource path="res://tilesets/platform1.tres" type="TileSet" id=25]
 [ext_resource path="res://traps/ChainSaw.tscn" type="PackedScene" id=26]
+[ext_resource path="res://levels/safe_area.tscn" type="PackedScene" id=27]
 
 [sub_resource type="Shader" id=1]
 code = "shader_type canvas_item;
@@ -261,5 +262,17 @@ position = Vector2( 318, 92 )
 
 [node name="Player" parent="." instance=ExtResource( 5 )]
 position = Vector2( 272, 21 )
+
+[node name="falling_platform" parent="." instance=ExtResource( 2 )]
+position = Vector2( 622, -68 )
+
+[node name="safe_area2" parent="." instance=ExtResource( 27 )]
+position = Vector2( 158, 76 )
+
+[node name="safe_area" parent="." instance=ExtResource( 27 )]
+position = Vector2( 222, 60 )
+
+[node name="safe_area3" parent="." instance=ExtResource( 27 )]
+position = Vector2( 158, -132 )
 
 [connection signal="body_entered" from="map/Fallzone" to="map/Fallzone" method="_on_Fallzone_body_entered"]

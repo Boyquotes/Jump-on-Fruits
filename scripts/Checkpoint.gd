@@ -17,7 +17,7 @@ func _on_AnimationPlayer_animation_finished(anim_name):
 
 func _on_Effective_Area_body_entered(body):
 	if(body.name=="Player" and !checked):
-		body.checkpoint_entered()
+		body.checkpoint_entered(position)
 		Global.checkpoint_on.append(position)
 		$AnimationPlayer.play("triggered")
 		checked = true

@@ -1,4 +1,4 @@
-extends KinematicBody2D
+extends StaticBody2D
 export var power = 390
 var current_rotation
 func _ready():
@@ -33,12 +33,12 @@ func collide_with(this, player):
 			force = Vector2(0,1)
 					
 	else: 		
-		#Se o ângulo não for paralelo aos 2 eixos (Em trabalho)
-		#force = Vector2(1,1).rotated(current_rotation)
+		#Se o ângulo não for paralelo aos 2 eixo
 		pass
 	
 	#Adiciona força no jogador equivalente ao ângulo de direção
-	player.speed += power*force
+	player.speed = 0
+	player.speed = power*force
 
 func _on_animation_animation_finished(anim_name):
 	if anim_name == "triggered":

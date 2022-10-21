@@ -6,6 +6,7 @@ var up = Vector2.UP
 var stop = false;
 var life = 3
 var max_life = 3
+onready var first_spawn = position
 export var move_speed = 100
 const body_gravity = 1200
 var gravity = body_gravity
@@ -17,7 +18,7 @@ var hitted = false
 var knockback_dir = 0
 var knockback_int = 400
 var knockback_yint = -100
-var last_ground = Vector2.ZERO
+var last_ground = null
 var let_dust = false
 var freezed = false
 
@@ -137,6 +138,7 @@ func apply_gravity(delta):
 
 func _on_hurtbox_body_entered(body):
 	var specials = ["saw", "Fallzone"]
+	print(body)
 	var immunity_frames = 1
 	life-=1
 	emit_signal("change_life", life, max_life)
@@ -146,7 +148,7 @@ func _on_hurtbox_body_entered(body):
 	hitted = true
 	if specials.has(body.name) and !is_grounded() and life>0:
 		respawn_after_hit(body)
-		immunity_frames = 1.5
+		immunity_frames = 3
 	else: 
 		on_knockback(body)
 	#immunity frames	
@@ -175,9 +177,6 @@ func get_collisions():
 		#plataforma que cai
 		
 		if collider_obj!=null:
-			if collider_obj.collider is TileMap and is_grounded():
-				last_ground = position
-				
 			if collider_obj.collider.has_method("collide_with"):
 				collider_obj.collider.collide_with(collider_obj, self)
 				
@@ -187,8 +186,8 @@ func get_collisions():
 func dies():
 	if !died:
 		died = true
-		speed[0] = 0
-		speed[1] = -350
+		speed = Vector2.ZERO
+		emit_signal("change_life", 0, max_life)
 		get_node("HitBox").set_deferred("disabled", true)
 		yield(get_tree().create_timer(3),"timeout")
 		Global._reset_current()
@@ -200,11 +199,17 @@ func respawn_after_hit(body):
 	yield(get_tree().create_timer(2), "timeout")
 	freezed = false
 	get_node("hurtbox/shape").set_deferred("disabled", false)
-	position = last_ground 
-	position.x -= 20
+	if last_ground!=null:
+		position = last_ground 
 		
-func checkpoint_entered():
-	Global.last_checkpoint = position
+	elif Global.last_checkpoint!=null:
+		position = Global.last_checkpoint
+		
+	else:
+		position = first_spawn
+		
+func checkpoint_entered(new_pos):
+	Global.last_checkpoint = new_pos
 	
 func make_dust():
 

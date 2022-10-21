@@ -1,4 +1,4 @@
-extends "res://scripts/Interactive_Trap.gd"
+extends Node
 
 func _ready():
 	pass
@@ -6,7 +6,6 @@ func _ready():
 
 
 func actives():
-	if on:
 		for child in get_children():
 			if child.has_method("toggle"):
 				child.toggle()

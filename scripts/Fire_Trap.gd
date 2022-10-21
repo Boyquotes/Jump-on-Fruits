@@ -16,8 +16,10 @@ func check_animations():
 func _on_animation_finished(anim_name):
 	if anim_name == "fire":
 		$animacao.play("idle")
+		$fire/fire_hitbox.set_deferred("disabled", true)
 		get_node("active_area").hitted = false
 		
 	elif anim_name == "hit":
 		$animacao.play("fire")
+		$fire/fire_hitbox.set_deferred("disabled", false)
 		

@@ -1,5 +1,6 @@
-extends "res://scripts/Interactive_Trap.gd"
+extends Node
 export(float) var seconds  = 1
+export var on = true
 
 func _ready():
 	$Timer.wait_time = seconds
@@ -11,3 +12,6 @@ func _on_Timer_timeout():
 		for child in get_children():
 			if child.has_method("toggle"):
 				child.toggle()
+				
+func toggle():
+	on = !on

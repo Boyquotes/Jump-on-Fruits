@@ -1,0 +1,262 @@
+[gd_scene load_steps=19 format=2]
+
+[ext_resource path="res://assets_by_yago/RailGun_active.png" type="Texture" id=1]
+[ext_resource path="res://assets_by_yago/RailGun_idle.png" type="Texture" id=2]
+[ext_resource path="res://assets_by_yago/light.png" type="Texture" id=3]
+[ext_resource path="res://scripts/Railgun.gd" type="Script" id=5]
+
+[sub_resource type="RectangleShape2D" id=1]
+extents = Vector2( 8, 6 )
+
+[sub_resource type="Animation" id=2]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/path = NodePath("Sprite:hframes")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 0,
+"values": [ 9 ]
+}
+tracks/1/type = "value"
+tracks/1/path = NodePath("Sprite:texture")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 0,
+"values": [ ExtResource( 2 ) ]
+}
+tracks/2/type = "value"
+tracks/2/path = NodePath("Sprite:frame")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 0,
+"values": [ 0 ]
+}
+
+[sub_resource type="Animation" id=3]
+resource_name = "active"
+loop = true
+tracks/0/type = "value"
+tracks/0/path = NodePath("Sprite:hframes")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 1,
+"values": [ 5 ]
+}
+tracks/1/type = "value"
+tracks/1/path = NodePath("Sprite:texture")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 1,
+"values": [ ExtResource( 1 ) ]
+}
+tracks/2/type = "value"
+tracks/2/path = NodePath("Sprite:frame")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/keys = {
+"times": PoolRealArray( 0, 0.2, 0.4, 0.6, 0.8 ),
+"transitions": PoolRealArray( 1, 1, 1, 1, 1 ),
+"update": 1,
+"values": [ 0, 1, 2, 3, 4 ]
+}
+
+[sub_resource type="Animation" id=4]
+resource_name = "idle"
+length = 1.7
+loop = true
+step = 0.2
+tracks/0/type = "value"
+tracks/0/path = NodePath("Sprite:hframes")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 1,
+"values": [ 9 ]
+}
+tracks/1/type = "value"
+tracks/1/path = NodePath("Sprite:texture")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 1,
+"values": [ ExtResource( 2 ) ]
+}
+tracks/2/type = "value"
+tracks/2/path = NodePath("Sprite:frame")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/keys = {
+"times": PoolRealArray( 0, 0.2, 0.4, 0.6, 0.8, 1, 1.2, 1.4 ),
+"transitions": PoolRealArray( 1, 1, 1, 1, 1, 1, 1, 1 ),
+"update": 1,
+"values": [ 0, 1, 2, 3, 4, 5, 6, 7 ]
+}
+
+[sub_resource type="RectangleShape2D" id=17]
+extents = Vector2( 6, 16.375 )
+
+[sub_resource type="Gradient" id=6]
+colors = PoolColorArray( 1, 1, 1, 1, 0.933594, 0.800781, 1, 1 )
+
+[sub_resource type="GradientTexture" id=7]
+gradient = SubResource( 6 )
+
+[sub_resource type="Curve" id=8]
+_data = [ Vector2( 0, 1 ), 0.0, 0.0, 0, 0, Vector2( 0.967509, 0.634091 ), 0.0, 0.0, 0, 0 ]
+
+[sub_resource type="CurveTexture" id=9]
+curve = SubResource( 8 )
+
+[sub_resource type="ParticlesMaterial" id=10]
+lifetime_randomness = 0.36
+emission_shape = 2
+emission_box_extents = Vector3( 8, 1, 1 )
+flag_disable_z = true
+direction = Vector3( 0, 0, 0 )
+spread = 120.22
+gravity = Vector3( 0, 0, 0 )
+initial_velocity = 20.0
+initial_velocity_random = 1.0
+orbit_velocity = 0.0
+orbit_velocity_random = 0.0
+angle = 1.0
+angle_random = 1.0
+scale = 0.02
+scale_curve = SubResource( 9 )
+color_ramp = SubResource( 7 )
+
+[sub_resource type="Curve" id=11]
+_data = [ Vector2( 0, 0.526136 ), 0.0, 0.0, 0, 0, Vector2( 0.501805, 0.6625 ), 0.0, 0.0, 0, 0, Vector2( 1, 0 ), 0.0, 0.0, 0, 0 ]
+
+[sub_resource type="CurveTexture" id=12]
+curve = SubResource( 11 )
+
+[sub_resource type="ParticlesMaterial" id=13]
+flag_disable_z = true
+direction = Vector3( 0, 1, 0 )
+spread = 89.4
+gravity = Vector3( 0, 0, 0 )
+initial_velocity = 13.33
+orbit_velocity = 0.0
+orbit_velocity_random = 0.0
+scale = 0.15
+scale_curve = SubResource( 12 )
+color = Color( 0.956863, 0.858824, 1, 1 )
+
+[sub_resource type="Environment" id=18]
+background_mode = 4
+background_energy = 1.73
+glow_enabled = true
+glow_intensity = 0.7
+glow_strength = 1.12
+glow_blend_mode = 0
+glow_hdr_threshold = 0.7
+glow_hdr_scale = 1.64
+
+[node name="Railgun" type="StaticBody2D"]
+script = ExtResource( 5 )
+
+[node name="hitbox" type="CollisionShape2D" parent="."]
+position = Vector2( 0, 2 )
+shape = SubResource( 1 )
+
+[node name="Sprite" type="Sprite" parent="."]
+texture = ExtResource( 2 )
+hframes = 9
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+autoplay = "idle"
+anims/RESET = SubResource( 2 )
+anims/active = SubResource( 3 )
+anims/idle = SubResource( 4 )
+
+[node name="laser" type="Line2D" parent="."]
+position = Vector2( 0, -3 )
+points = PoolVector2Array( 0, 0, 0, -30 )
+width = 12.0
+default_color = Color( 0.956863, 0.858824, 1, 1 )
+joint_mode = 2
+round_precision = 16
+antialiased = true
+
+[node name="damage_area" type="Area2D" parent="."]
+position = Vector2( 0, -16 )
+
+[node name="damage" type="CollisionShape2D" parent="damage_area"]
+modulate = Color( 1, 0, 0, 1 )
+shape = SubResource( 17 )
+
+[node name="particles" type="Node2D" parent="."]
+
+[node name="laser_particles" type="Particles2D" parent="particles"]
+position = Vector2( 0, -11 )
+emitting = false
+amount = 12
+lifetime = 1.2
+explosiveness = 0.31
+randomness = 0.19
+process_material = SubResource( 10 )
+texture = ExtResource( 3 )
+
+[node name="wall_particles" type="Particles2D" parent="particles"]
+position = Vector2( 0, -31 )
+emitting = false
+explosiveness = 0.1
+process_material = SubResource( 13 )
+texture = ExtResource( 3 )
+
+[node name="start_particles" type="Particles2D" parent="particles"]
+position = Vector2( 0, -7 )
+emitting = false
+explosiveness = 0.1
+process_material = SubResource( 13 )
+texture = ExtResource( 3 )
+
+[node name="limit" type="RayCast2D" parent="."]
+enabled = true
+cast_to = Vector2( 0, -35 )
+collision_mask = 2
+
+[node name="Tween" type="Tween" parent="."]
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource( 18 )
+
+[connection signal="body_entered" from="damage_area" to="." method="_on_damage_area_body_entered"]
