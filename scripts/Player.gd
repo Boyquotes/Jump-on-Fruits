@@ -159,6 +159,9 @@ func _on_hurtbox_body_entered(body):
 	
 	
 func on_knockback(colisor):
+	if colisor.has_method("destroy"):
+		colisor.destroy()
+		
 	if colisor.has_method("get_velocity"):
 		var colisor_velocity = colisor.get_velocity().x
 		var colisor_dir = sign(colisor_velocity)
