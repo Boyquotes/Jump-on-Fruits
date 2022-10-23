@@ -140,14 +140,13 @@ position = Vector2( -234, -76 )
 
 [node name="Mushroom" parent="enemies" instance=ExtResource( 1 )]
 position = Vector2( 824, 72 )
-start_left = false
 
 [node name="Mushroom2" parent="enemies" instance=ExtResource( 1 )]
 position = Vector2( 664, 96 )
-start_left = false
 
 [node name="Mushroom3" parent="enemies" instance=ExtResource( 1 )]
 position = Vector2( 744, 48 )
+scale = Vector2( -1, 1 )
 
 [node name="Falling_Plat" parent="." instance=ExtResource( 2 )]
 position = Vector2( 350, 20 )

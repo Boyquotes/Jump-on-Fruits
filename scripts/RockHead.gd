@@ -57,8 +57,7 @@ func _physics_process(delta):
 				_check_terrain()
 				get_animation(direction)
 				set_collision_mask_bit(0, true)
-				Global._update_nodes()
-				Global.player_camera.shake(0.5, 3)
+				Global.get_player_camera().shake(0.5, 3)
 			
 			if collision.collider.name == "Player":
 				set_collision_mask_bit(0, false)

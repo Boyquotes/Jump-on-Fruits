@@ -14,10 +14,10 @@ var jump_force = 720
 var dir = 0
 var grab_dir = 0
 var jumps = 1
+var last_dir = 1
 var hitted = false
 var knockback_dir = 0
-var knockback_int = 400
-var knockback_yint = -100
+var knockback_int = 780
 var last_ground = null
 var let_dust = false
 var freezed = false
@@ -43,26 +43,27 @@ func _physics_process(delta:float) -> void:
 	
 		if !freezed:
 		
-			if !hitted: 
-				speed[0] = lerp(speed[0], move_speed*dir, 0.2)
-			else:
-				speed[0] = lerp(speed[0], move_speed*knockback_dir, 0.2)
-	
+			
+			speed[0] = lerp(speed[0], move_speed*dir, 0.2)
+				
 			apply_gravity(delta)
-			speed = move_and_slide(speed, up)
+		else:
+			speed = Vector2.ZERO
 	else:
-		apply_gravity(delta)
-		speed = move_and_slide(speed)
+		apply_gravity(delta)	
+	speed = move_and_slide(speed, up)
 	#print(speed)
 	
 func move_input():
 	if(!stop):
 		dir = (int(Input.is_action_pressed("move_right")) - int(Input.is_action_pressed("move_left")))
+		if dir!=0:
+			last_dir = dir
 	if Input.is_action_pressed("go_down") and Input.is_action_pressed("jump") and is_grounded():
-		position.y +=4
+		position.y +=2
 		
 func _input(event: InputEvent) -> void:
-	if !hitted:
+	if !hitted and !died:
 		if event.is_action_pressed("jump") and !Input.is_action_pressed("go_down"):
 			if !grabing_wall():
 				if is_grounded():
@@ -137,8 +138,7 @@ func apply_gravity(delta):
 	speed[1] += gravity*delta
 
 func _on_hurtbox_body_entered(body):
-	var specials = ["saw", "Fallzone"]
-	print(body)
+	var specials = ["saw", "Fallzone", "spike_ball", "Railgun"]
 	var immunity_frames = 1
 	life-=1
 	emit_signal("change_life", life, max_life)
@@ -159,15 +159,14 @@ func _on_hurtbox_body_entered(body):
 	
 	
 func on_knockback(colisor):
-	if(colisor.has_method("get_velocity")):
-		if(colisor.get_velocity().x>0):
-			knockback_dir = 1
+	if colisor.has_method("get_velocity"):
+		var colisor_dir = sign(colisor.get_velocity().x)
+		if colisor_dir !=0 and colisor_dir!=last_dir:
+			knockback_dir = colisor_dir
 		else:
-			knockback_dir = -1
+			knockback_dir = -last_dir
+		speed[0] += knockback_dir*knockback_int
 		
-	speed[0] = knockback_dir*knockback_int
-	speed[1] = knockback_yint
-	speed = move_and_slide(speed)
 	
 
 func get_collisions():
@@ -187,6 +186,7 @@ func dies():
 	if !died:
 		died = true
 		speed = Vector2.ZERO
+		speed[1] = -200
 		emit_signal("change_life", 0, max_life)
 		get_node("HitBox").set_deferred("disabled", true)
 		yield(get_tree().create_timer(3),"timeout")

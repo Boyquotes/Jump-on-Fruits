@@ -10,9 +10,8 @@
 [ext_resource path="res://scripts/PlayerCamera.gd" type="Script" id=8]
 [ext_resource path="res://Pixel Adventure 1/Free/Main Characters/Ninja Frog/Wall Jump (32x32).png" type="Texture" id=9]
 
-[sub_resource type="CapsuleShape2D" id=10]
-radius = 9.0
-height = 6.0
+[sub_resource type="RectangleShape2D" id=13]
+extents = Vector2( 9.5, 12 )
 
 [sub_resource type="Animation" id=6]
 resource_name = "Double_Jump"
@@ -460,15 +459,15 @@ tracks/3/keys = {
 }
 
 [sub_resource type="RectangleShape2D" id=8]
-extents = Vector2( 10.5, 9 )
+extents = Vector2( 10.5, 9.5 )
 
 [node name="Player" type="KinematicBody2D"]
-collision_mask = 78
+collision_mask = 70
 script = ExtResource( 4 )
 
 [node name="HitBox" type="CollisionShape2D" parent="."]
-position = Vector2( -1, 0 )
-shape = SubResource( 10 )
+position = Vector2( -0.5, 0 )
+shape = SubResource( 13 )
 
 [node name="Texture" type="Sprite" parent="."]
 position = Vector2( -1, -4 )
@@ -489,13 +488,13 @@ anims/wall_jump = SubResource( 11 )
 [node name="RayCasts_ground" type="Node2D" parent="."]
 
 [node name="RayCast2D" type="RayCast2D" parent="RayCasts_ground"]
-position = Vector2( -6, 6 )
+position = Vector2( -10, 6 )
 enabled = true
 cast_to = Vector2( 0, 7 )
 collision_mask = 66
 
 [node name="RayCast2D2" type="RayCast2D" parent="RayCasts_ground"]
-position = Vector2( 4, 6 )
+position = Vector2( 9, 6 )
 enabled = true
 cast_to = Vector2( 0, 7 )
 collision_mask = 66
@@ -509,7 +508,7 @@ collision_mask = 66
 [node name="MainCamera" type="Camera2D" parent="."]
 position = Vector2( -1, -1 )
 current = true
-zoom = Vector2( 0.8, 0.8 )
+zoom = Vector2( 1.5, 1.5 )
 limit_left = 0
 limit_top = -400
 limit_right = 2007
@@ -528,7 +527,7 @@ collision_mask = 0
 
 [node name="shape" type="CollisionShape2D" parent="hurtbox"]
 modulate = Color( 0.262745, 0.258824, 1, 1 )
-position = Vector2( -0.5, -2 )
+position = Vector2( -0.5, -1.5 )
 shape = SubResource( 8 )
 
 [node name="wall_raycasts" type="Node2D" parent="."]

@@ -3,7 +3,7 @@ var shaking = false
 var dur = 0
 var inten = 0
 func _ready():
-	pass 
+	pass
 	
 func _process(delta):
 	if shaking: shake(dur, inten)

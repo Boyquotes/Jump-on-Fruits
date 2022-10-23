@@ -43,10 +43,9 @@ func _clock_animation(seconds, minutes):
 		if (minutes<1):
 			if(seconds>=16 or seconds == 0):
 				if(seconds%10==0):
-					if(!is_instance_valid(Global.player_camera)):
-						Global._update_nodes()
-					Global.player_camera.shake(0.5, 1.7)
+					Global.get_player_camera().shake(0.5, 1.7)
 					clock.set("custom_colors/font_color", red)
+					
 				else:
 					clock.set("custom_colors/font_color", white)
 			else:

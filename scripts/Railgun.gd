@@ -1,7 +1,5 @@
 extends "res://scripts/Interactive_Trap.gd"
 
-var laser_speed = 300
-
 var destination_cord = Vector2.ZERO
 var laser_width = 0
 var in_range = false
@@ -55,8 +53,8 @@ func open_laser():
 	for particle in $particles.get_children():
 		particle.emitting = true
 		
-	$damage_area/damage.set_deferred("disabled", false)
 	yield($Tween, "tween_completed")
+	$damage_area/damage.set_deferred("disabled", false)
 	$AnimationPlayer.play("active")
 	
 	
@@ -69,8 +67,8 @@ func close_laser():
 	for particle in $particles.get_children():
 		particle.emitting = false
 		
-	$damage_area/damage.set_deferred("disabled", true)
 	yield($Tween, "tween_completed")
+	$damage_area/damage.set_deferred("disabled", true)
 	$AnimationPlayer.play("idle")
 	
 	$Tween.remove_all()
@@ -78,18 +76,21 @@ func close_laser():
 
 func toggle():
 	on = !on
+	
 	if in_range:
 		if on and !emitting:
 			open_laser()
 			
 		elif !on and emitting:
 			close_laser()
-	else:
-		on = false
 
 
 func _on_damage_area_body_entered(body):
 	if in_range and on:
-		if body.has_method("dies"):
-			if !body.hitted:
+		if body.name == "Player":
+			if body.has_method("_on_hurtbox_body_entered"):
+				if !body.hitted:
+					body._on_hurtbox_body_entered(self)
+		else: 
+			if body!=self:
 				body.dies()
