@@ -1,4 +1,4 @@
-extends "res://scripts/Interactive_Trap.gd"
+extends Togglable_Object
 
 export var power = 10
 var bodies_in = []
@@ -7,8 +7,10 @@ onready var area = $wind/area.position
 
 func _ready():
 	on = true
+	$wind_end.position = Vector2(0,-$wind/area.shape.extents.y*2)
 	
 func _physics_process(delta):
+
 	if on:
 		#As particulas duram o equivalente ao tamanho da área
 		$wind_particles.emitting = true
@@ -23,40 +25,11 @@ func _physics_process(delta):
 		#Para cada corpo dentro da área
 		for body in bodies_in:
 			var force = Vector2.ZERO
-			current_rotation = rotation_degrees
-			#corrige a rotação se estiver negativa
-			if current_rotation<0:
-				current_rotation*=-1
-				
-			#tratamento de força com base no ângulo
-			if int(round(current_rotation))%90==0 || current_rotation==0:
-				var round_rotation = int(round(current_rotation))
-				if round_rotation == 90:
-					force = Vector2(1,0)
-					
-				elif round_rotation == 270:
-					force = Vector2(-1,0)
-					
-				elif round_rotation == 0 || round_rotation == 360:
-					force = Vector2(0,-1)
-				
-				else:
-					force = Vector2(0,1)
-					
-			else: 		
-				#Se o ângulo não for paralelo aos 2 eixos (Em trabalho)
-				#force = Vector2(1,1).rotated(current_rotation)
-				pass
-						
-				
-			#Adiciona força no jogador equivalente ao ângulo de direção
+			force = global_position.direction_to($wind_end.global_position)
 			body.speed += power*force
 	else:
 		$wind_particles.emitting = false
 		$animation.play("RESET")
-	
-	
-	
 
 func _on_wind_body_entered(body):
 	if body.name=="Player":

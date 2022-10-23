@@ -16,7 +16,7 @@ func check_states(delta):
 		PATROL:
 			patrol()
 			
-		STOPPED:
+		IDLE:
 			movement.x = 0
 			
 		HITTED:
@@ -43,7 +43,7 @@ func check_states(delta):
 func patrol():
 	movement.x = direction.x*speed
 	if check_sides() and current_state!=ATTACKING:
-		current_state = STOPPED
+		current_state = IDLE
 	check_view()
 
 func change_side():
@@ -58,7 +58,7 @@ func start_attack():
 
 func attacking():
 	if $wall_check.is_colliding():
-		current_state = STOPPED
+		current_state = IDLE
 
 func check_view():
 	if $view_field.is_colliding():
@@ -89,15 +89,14 @@ func check_animations():
 		$animation.play(current)
 		
 func _on_animation_animation_finished(anim_name):
-
-	if anim_name == "hit":
-		current_state = PATROL
-		$hurtbox/area.set_deferred("disabled", false)
 	
-	if anim_name == "idle":
-		current_state = PATROL
-		change_side()
-	
-	if anim_name == "preparing":
-		current_state = ATTACK
+	match anim_name:
+		"hit":
+			current_state = PATROL
+			$hurtbox/area.set_deferred("disabled", false)
+		"idle":
+			current_state = PATROL
+			change_side()
+		"preparing":
+			current_state = ATTACK
 

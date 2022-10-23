@@ -127,7 +127,7 @@ tracks/2/keys = {
 
 [sub_resource type="RectangleShape2D" id=4]
 resource_local_to_scene = true
-extents = Vector2( 11.5, 60.5 )
+extents = Vector2( 11.5, 60 )
 
 [sub_resource type="RectangleShape2D" id=5]
 extents = Vector2( 8.5, 4 )
@@ -150,7 +150,7 @@ scale = 1.3
 scale_random = 0.57
 
 [node name="Fan" type="StaticBody2D"]
-collision_layer = 18
+collision_layer = 2
 collision_mask = 0
 script = ExtResource( 3 )
 
@@ -165,7 +165,7 @@ collision_layer = 16
 
 [node name="area" type="CollisionShape2D" parent="wind"]
 modulate = Color( 0.203922, 0.937255, 0, 1 )
-position = Vector2( 0.5, -63.5 )
+position = Vector2( 0.5, -63 )
 shape = SubResource( 4 )
 
 [node name="collision" type="CollisionShape2D" parent="."]
@@ -180,6 +180,9 @@ position = Vector2( 0, -7 )
 emitting = false
 amount = 14
 process_material = SubResource( 6 )
+
+[node name="wind_end" type="Position2D" parent="."]
+position = Vector2( 0, -124 )
 
 [connection signal="body_entered" from="wind" to="." method="_on_wind_body_entered"]
 [connection signal="body_exited" from="wind" to="." method="_on_wind_body_exited"]

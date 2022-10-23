@@ -3,7 +3,7 @@ extends Enemy
 class_name Patrol_Enemy
 var attacking_unity = false
 
-enum{PATROL = 2, STOPPED}
+enum{PATROL = 2, IDLE}
 
 
 func _ready():
@@ -22,7 +22,7 @@ func check_states(delta):
 	match(current_state):
 		PATROL:
 			patrol()
-		STOPPED:
+		IDLE:
 			movement.x = 0
 		HITTED:
 			movement.x = 0
@@ -38,7 +38,7 @@ func check_states(delta):
 func patrol():
 	movement.x = direction.x*speed
 	if check_sides():
-		current_state = STOPPED
+		current_state = IDLE
 
 func change_side():
 	direction.x *= -1
@@ -72,13 +72,11 @@ func check_animations():
 		
 func _on_animation_animation_finished(anim_name):
 
-	if anim_name == "hit":
-		current_state = PATROL
-		$hurtbox/area.set_deferred("disabled", false)
-	
-	if anim_name == "idle":
-		current_state = PATROL
-		change_side()
+	match anim_name:
+		"hit":
+			current_state = PATROL
+			$hurtbox/area.set_deferred("disabled", false)
+		"idle":
+			current_state = PATROL
+			change_side()
 
-func get_velocity():
-	return movement

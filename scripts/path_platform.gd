@@ -1,4 +1,4 @@
-extends "res://scripts/Interactive_Trap.gd"
+extends Togglable_Object
 export var speed = 120
 
 func _ready():

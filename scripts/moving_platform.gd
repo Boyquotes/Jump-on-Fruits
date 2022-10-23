@@ -1,4 +1,4 @@
-extends "res://scripts/object_in_rail.gd"
+extends Object_Rail
 
 func _ready():
 	on = true

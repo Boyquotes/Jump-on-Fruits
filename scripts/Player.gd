@@ -4,7 +4,7 @@ var died = false
 var speed = Vector2(0,0)
 var up = Vector2.UP
 var stop = false;
-var life = 3
+var life = 4
 var max_life = 3
 onready var first_spawn = position
 export var move_speed = 100
@@ -160,11 +160,16 @@ func _on_hurtbox_body_entered(body):
 	
 func on_knockback(colisor):
 	if colisor.has_method("get_velocity"):
-		var colisor_dir = sign(colisor.get_velocity().x)
-		if colisor_dir !=0 and colisor_dir!=last_dir:
+		var colisor_velocity = colisor.get_velocity().x
+		var colisor_dir = sign(colisor_velocity)
+		if colisor_dir !=0 and colisor_dir!=last_dir and colisor_velocity!=0:
 			knockback_dir = colisor_dir
-		else:
-			knockback_dir = -last_dir
+		if colisor.name=="Rhino" and colisor_velocity!=0:
+			colisor_velocity*=8
+			speed[1]-=300
+		speed[0] += knockback_dir*knockback_int+colisor_velocity
+	else:
+		knockback_dir = -last_dir
 		speed[0] += knockback_dir*knockback_int
 		
 	

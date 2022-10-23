@@ -38,6 +38,7 @@ func dies():
 func _on_hurtbox_body_entered(body):
 	if body.name=="Player" and current_state != DEAD:
 		body.speed[1]=-345
+		body.jumps = 1
 		take_hit()
 
 func check_animations():
@@ -51,3 +52,6 @@ func _on_animation_animation_finished(anim_name):
 func _on_VisibilityNotifier2D_screen_exited():
 	if current_state == DEAD: 
 		queue_free()
+
+func get_velocity():
+	return movement

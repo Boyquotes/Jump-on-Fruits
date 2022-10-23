@@ -15,7 +15,7 @@ func check_states(delta):
 	match(current_state):
 		PATROL:
 			patrol()
-		STOPPED:
+		IDLE:
 			movement.x = 0
 		HITTED:
 			movement.x = 0
@@ -54,13 +54,12 @@ func check_animations():
 
 func _on_animation_animation_finished(anim_name):
 	
-	if anim_name=="attack":
-		current_state = PATROL
-	
-	if anim_name == "hit":
-		current_state = PATROL
-		$hurtbox/area.set_deferred("disabled", false)
-	
-	if anim_name == "idle":
-		current_state = PATROL
-		change_side()
+	match anim_name:
+		"attack":
+			current_state = PATROL
+		"hit":
+			current_state = PATROL
+			$hurtbox/area.set_deferred("disabled", false)
+		"idle":
+			current_state = PATROL
+			change_side()

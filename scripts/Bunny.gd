@@ -28,4 +28,4 @@ func attacking():
 		if $view_field.is_colliding():
 			current_state = PREPARING
 		else:
-			current_state = STOPPED
+			current_state = IDLE

@@ -23,10 +23,7 @@
 [ext_resource path="res://enemies/Bird.tscn" type="PackedScene" id=21]
 [ext_resource path="res://enemies/Bunny.tscn" type="PackedScene" id=22]
 [ext_resource path="res://enemies/Chamaleon.tscn" type="PackedScene" id=23]
-
-[sub_resource type="RectangleShape2D" id=4]
-resource_local_to_scene = true
-extents = Vector2( 11.5, 154.5 )
+[ext_resource path="res://enemies/Rhino.tscn" type="PackedScene" id=24]
 
 [sub_resource type="CircleShape2D" id=1]
 resource_local_to_scene = true
@@ -115,25 +112,6 @@ rotation = -0.825541
 position = Vector2( 384, -162 )
 rotation = 1.5708
 
-[node name="Fan" parent="." instance=ExtResource( 7 )]
-position = Vector2( 610, -36 )
-rotation = 1.5708
-on = true
-
-[node name="Fan3" parent="." instance=ExtResource( 7 )]
-position = Vector2( 730, 48 )
-on = true
-power = -10
-
-[node name="Fan2" parent="." instance=ExtResource( 7 )]
-position = Vector2( 716, -50 )
-rotation = -1.5708
-on = true
-
-[node name="area" parent="Fan2/wind" index="0"]
-position = Vector2( 0.5, -157.5 )
-shape = SubResource( 4 )
-
 [node name="Trampoline" parent="." instance=ExtResource( 16 )]
 position = Vector2( 824, 20 )
 power = 730
@@ -158,12 +136,6 @@ root_node = NodePath("../../RockHead2")
 
 [node name="moving_platform3" parent="." instance=ExtResource( 6 )]
 position = Vector2( 1186, -78 )
-
-[node name="Fan4" parent="moving_platform3/platform" index="0" instance=ExtResource( 7 )]
-position = Vector2( 0, 6 )
-rotation = -3.14159
-on = true
-power = -35
 
 [node name="Spiked_Ball" parent="." instance=ExtResource( 8 )]
 position = Vector2( 1350, -70 )
@@ -210,11 +182,6 @@ path = NodePath("../controller")
 
 [node name="controller" parent="." instance=ExtResource( 10 )]
 
-[node name="Fan4" parent="controller" instance=ExtResource( 7 )]
-position = Vector2( 2194, 50 )
-on = true
-power = 67
-
 [node name="ChainSaw4" parent="controller" instance=ExtResource( 9 )]
 position = Vector2( 2142, -60 )
 rotation = 0.954695
@@ -258,12 +225,6 @@ auto = true
 position = Vector2( 1863, -79 )
 path = NodePath("../rotor/Railgun2")
 
-[node name="Player" parent="." instance=ExtResource( 2 )]
-position = Vector2( 1519, -28 )
-
-[node name="MainCamera" parent="Player" index="4"]
-limit_right = 5000
-
 [node name="rotor" parent="." instance=ExtResource( 18 )]
 position = Vector2( 1753, -131 )
 rotation = -3.14159
@@ -285,7 +246,7 @@ cast_to = Vector2( 0, -202 )
 modulate = Color( 0.945098, 0.768627, 0.768627, 1 )
 
 [node name="Mushroom" parent="." instance=ExtResource( 19 )]
-position = Vector2( 1732, 38 )
+position = Vector2( 1372, 38 )
 
 [node name="patrol_area" parent="." instance=ExtResource( 20 )]
 position = Vector2( 1708, 37 )
@@ -293,7 +254,7 @@ collision_layer = 16
 collision_mask = 8
 
 [node name="CollisionShape2D" parent="patrol_area" index="0"]
-position = Vector2( -236, -125 )
+position = Vector2( -239, -123 )
 shape = SubResource( 5 )
 
 [node name="Bunny" parent="." instance=ExtResource( 22 )]
@@ -303,13 +264,35 @@ position = Vector2( 1557, -26 )
 position = Vector2( 1543, -129 )
 
 [node name="Chamaleon" parent="." instance=ExtResource( 23 )]
-position = Vector2( 1654, 41 )
+position = Vector2( 1503, 41 )
+
+[node name="Rhino" parent="." instance=ExtResource( 24 )]
+position = Vector2( 1676, 35 )
+
+[node name="view_field" parent="Rhino" index="6"]
+cast_to = Vector2( 217, 0 )
+
+[node name="Fan4" parent="." instance=ExtResource( 7 )]
+position = Vector2( 1839, -311 )
+rotation = 2.14675
+on = true
+power = -63
+
+[node name="Player" parent="." instance=ExtResource( 2 )]
+position = Vector2( 1826, -276 )
+
+[node name="MainCamera" parent="Player" index="4"]
+limit_right = 5000
+
+[node name="Trampoline2" parent="." instance=ExtResource( 16 )]
+position = Vector2( 1737, -251 )
+rotation = 0.23911
+power = 780
 
 [editable path="TileMap/Fallzone"]
 [editable path="moving_platform"]
 [editable path="moving_platform2"]
 [editable path="ChainSaw"]
-[editable path="Fan2"]
 [editable path="RockHead"]
 [editable path="RockHead2"]
 [editable path="moving_platform3"]
@@ -318,7 +301,8 @@ position = Vector2( 1654, 41 )
 [editable path="Spiked_Ball3"]
 [editable path="path_platform"]
 [editable path="controller/ChainSaw6"]
-[editable path="Player"]
 [editable path="rotor"]
 [editable path="rotor/Railgun2"]
 [editable path="patrol_area"]
+[editable path="Rhino"]
+[editable path="Player"]

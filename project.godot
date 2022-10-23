@@ -24,6 +24,11 @@ _global_script_classes=[ {
 "language": "NativeScript",
 "path": "res://addons/godot-git-plugin/git_api.gdns"
 }, {
+"base": "Togglable_Object",
+"class": "Object_Rail",
+"language": "GDScript",
+"path": "res://scripts/object_in_rail.gd"
+}, {
 "base": "Patrol_Enemy",
 "class": "Patrol_Charge_Enemy",
 "language": "GDScript",
@@ -33,13 +38,26 @@ _global_script_classes=[ {
 "class": "Patrol_Enemy",
 "language": "GDScript",
 "path": "res://scripts/patrol_enemy.gd"
+}, {
+"base": "Enemy",
+"class": "Static_Enemy",
+"language": "GDScript",
+"path": "res://scripts/static_enemy.gd"
+}, {
+"base": "Node2D",
+"class": "Togglable_Object",
+"language": "GDScript",
+"path": "res://scripts/Interactive_Trap.gd"
 } ]
 _global_script_class_icons={
 "Clock": "",
 "Enemy": "",
 "GitAPI": "",
+"Object_Rail": "",
 "Patrol_Charge_Enemy": "",
-"Patrol_Enemy": ""
+"Patrol_Enemy": "",
+"Static_Enemy": "",
+"Togglable_Object": ""
 }
 
 [application]

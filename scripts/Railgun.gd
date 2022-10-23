@@ -1,4 +1,4 @@
-extends "res://scripts/Interactive_Trap.gd"
+extends Togglable_Object
 
 var destination_cord = Vector2.ZERO
 var laser_width = 0

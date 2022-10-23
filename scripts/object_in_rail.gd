@@ -1,9 +1,11 @@
-extends "res://scripts/Interactive_Trap.gd"
+extends Togglable_Object
+
+class_name Object_Rail
 
 export var delay = 0.5
 export var speed = 140
 
-onready var animator = get_node("object/animation")
+onready var animator = get_node_or_null("object/animation")
 onready var movement = get_node("movement")
 
 var object
@@ -13,7 +15,7 @@ var velocity = Vector2.ZERO
 var destiny
 
 func _ready():
-	object = get_node("object")
+	object = get_node_or_null("object")
 	destiny = Vector2(1,0)*$chain.rect_size.x+Vector2(8,0)
 	if $chain.rect_size.y !=8:
 		$chain.rect_size.y = 8
