@@ -1,8 +1,7 @@
-[gd_scene load_steps=17 format=2]
+[gd_scene load_steps=16 format=2]
 
 [ext_resource path="res://scripts/Duck.gd" type="Script" id=1]
 [ext_resource path="res://Pixel Adventure 2/Enemies/Duck/Jump Anticipation (36x36).png" type="Texture" id=2]
-[ext_resource path="res://Pixel Adventure 2/Enemies/Bunny/Hit (34x44).png" type="Texture" id=4]
 [ext_resource path="res://Pixel Adventure 2/Enemies/Duck/Jump (36x36).png" type="Texture" id=5]
 [ext_resource path="res://Pixel Adventure 2/Enemies/Duck/Fall (36x36).png" type="Texture" id=6]
 [ext_resource path="res://Pixel Adventure 2/Enemies/Duck/Idle (36x36).png" type="Texture" id=7]
@@ -125,7 +124,7 @@ tracks/0/keys = {
 "times": PoolRealArray( 0 ),
 "transitions": PoolRealArray( 1 ),
 "update": 1,
-"values": [ ExtResource( 4 ) ]
+"values": [ ExtResource( 8 ) ]
 }
 tracks/1/type = "value"
 tracks/1/path = NodePath("texture:hframes")
@@ -380,12 +379,11 @@ extents = Vector2( 13, 2.5 )
 
 [node name="Duck" type="KinematicBody2D"]
 collision_layer = 8
-collision_mask = 99
+collision_mask = 98
 script = ExtResource( 1 )
 speed = 147
 
 [node name="texture" type="Sprite" parent="."]
-scale = Vector2( -1, 1 )
 texture = ExtResource( 7 )
 hframes = 10
 
@@ -418,7 +416,7 @@ scale = Vector2( 1.4, 1.55 )
 [node name="wall_check" type="RayCast2D" parent="."]
 position = Vector2( 0, 6 )
 enabled = true
-cast_to = Vector2( 18, 0 )
+cast_to = Vector2( -18, 0 )
 collision_mask = 2
 
 [node name="ground_check" type="RayCast2D" parent="."]
@@ -428,7 +426,7 @@ collision_mask = 66
 
 [node name="view_field" type="RayCast2D" parent="."]
 enabled = true
-cast_to = Vector2( 250, 0 )
+cast_to = Vector2( -250, 0 )
 
 [node name="view_cooldown" type="Timer" parent="."]
 wait_time = 3.0

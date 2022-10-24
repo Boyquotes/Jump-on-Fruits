@@ -2,5 +2,5 @@ extends Patrol_Enemy
 
 
 func _ready():
-	lifes = 2
+	lifes = 1
 	has_gravity = false

@@ -41,26 +41,22 @@ func check_states(delta):
 	movement = move_and_slide(movement)
 
 func patrol():
+	check_sides()
 	movement.x = direction.x*speed
-	if check_sides() and current_state!=ATTACKING:
-		current_state = IDLE
-	check_view()
-
-func change_side():
-	direction.x *= -1
-	$view_field.cast_to*=-1
-	$texture.scale.x *= -1
-	$wall_check.cast_to.x*= -1
+	if !check_view():
+		if check_wall() and current_state!=ATTACKING:
+			current_state = IDLE
 
 func start_attack():
 	movement.x = direction.x*speed*4
 	current_state = ATTACKING
 
 func attacking():
-	if $wall_check.is_colliding():
+	if check_wall():
 		current_state = IDLE
 
 func check_view():
+	$view_field.force_raycast_update()
 	if $view_field.is_colliding():
 		current_state = PREPARING
 		return true

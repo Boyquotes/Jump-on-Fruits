@@ -4,13 +4,6 @@ extends Static_Enemy
 func _ready():
 	lifes = 5
 	has_gravity = true
-	direction = Vector2(1,0)
-	
-func change_side():
-	$wall_check.cast_to.x*=-1
-	$view_field.cast_to.x*=-1
-	$texture.scale.x*=-1
-	direction.x*=-1	
 
 func check_view():
 	if $view_field.is_colliding():
@@ -24,4 +17,8 @@ func attack():
 		Global.get_player_camera().shake(0.3, 6)
 		yield(get_tree().create_timer(4), "timeout")
 		change_side()
-
+		
+	elif !$ground_check.is_colliding():
+		current_state = IDLE
+		yield(get_tree().create_timer(4), "timeout")
+		change_side()

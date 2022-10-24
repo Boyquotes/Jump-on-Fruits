@@ -6,7 +6,6 @@ var jump_force = 330
 
 func _ready():
 	lifes = 2
-	direction = Vector2(1,0)
 	has_gravity = true
 	current_state = IDLE
 	
@@ -42,12 +41,6 @@ func check_view():
 		current_state = PREPARING
 		return true
 	return false
-	
-func change_side():
-	$wall_check.cast_to.x *=-1
-	direction.x*=-1
-	$texture.scale.x*=-1
-	$view_field.cast_to.x*=-1
 	
 func attack():
 	movement = Vector2(direction.x*speed, -jump_force)

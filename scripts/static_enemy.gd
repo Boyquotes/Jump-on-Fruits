@@ -6,12 +6,13 @@ enum{IDLE = 2, ATTACK}
 
 func _ready():
 	current_state = IDLE
-	direction = Vector2(1,0)
+	attacking_unity = false
 	
 func _physics_process(delta):
 	check_state(delta)
 	if current_state!=DEAD:
 		check_animations()
+
 
 func check_state(delta):
 	check_view()
@@ -31,10 +32,17 @@ func check_state(delta):
 	
 	movement = move_and_slide(movement)
 
+func check_sides():
+	match current_side:	
+		Sides.LEFT:
+			direction.x = -1
+			$texture.flip_h = false
+		
+		Sides.RIGHT:
+			direction.x = 1
+			$texture.flip_h = true
+
 func check_view():
-	pass
-	
-func change_side():
 	pass
 	
 func attack():

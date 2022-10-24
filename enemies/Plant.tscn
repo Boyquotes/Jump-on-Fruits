@@ -279,7 +279,6 @@ script = ExtResource( 4 )
 
 [node name="texture" type="Sprite" parent="."]
 position = Vector2( 0, -4 )
-scale = Vector2( -1, 1 )
 texture = ExtResource( 3 )
 offset = Vector2( -3, 0 )
 hframes = 11
@@ -310,14 +309,15 @@ scale = Vector2( 2.05, 1.75 )
 
 [node name="view_field" type="RayCast2D" parent="."]
 enabled = true
-cast_to = Vector2( 303, 0 )
+cast_to = Vector2( -303, 0 )
+collision_mask = 3
 
 [node name="view_change" type="Timer" parent="."]
 wait_time = 3.0
 autostart = true
 
 [node name="bullet_spawn" type="Position2D" parent="."]
-position = Vector2( 11, -10 )
+position = Vector2( -11, -10 )
 
 [connection signal="animation_finished" from="animation" to="." method="_on_animation_animation_finished"]
 [connection signal="body_entered" from="hurtbox" to="." method="_on_hurtbox_body_entered"]

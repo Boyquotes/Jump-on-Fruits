@@ -277,7 +277,6 @@ script = ExtResource( 1 )
 speed = 58
 
 [node name="texture" type="Sprite" parent="."]
-scale = Vector2( -1, 1 )
 texture = ExtResource( 2 )
 hframes = 9
 
@@ -307,7 +306,7 @@ scale = Vector2( 1.75, 1.35 )
 
 [node name="wall_check" type="RayCast2D" parent="."]
 enabled = true
-cast_to = Vector2( 15, 0 )
+cast_to = Vector2( -15, 0 )
 collision_mask = 2
 
 [connection signal="animation_finished" from="animation" to="." method="_on_animation_animation_finished"]

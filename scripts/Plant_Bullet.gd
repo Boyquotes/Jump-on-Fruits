@@ -28,8 +28,9 @@ func instance_remain(sprite_frame):
 	sprite.frame = sprite_frame
 	new_remain.add_child(sprite)
 	new_remain.weight = rand_range(17.2,28.9)
+	new_remain.angular_velocity = 45
 	new_remain.apply_impulse(Vector2(-movement.x, 1),Vector2((sqrt(speed))*-movement.x, rand_range(-120,80)))
-	get_parent().add_child(new_remain)
+	get_parent().call_deferred("add_child",new_remain)
 	
 func destroy():
 	var index = 0

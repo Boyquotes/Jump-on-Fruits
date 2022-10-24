@@ -5,25 +5,35 @@ var attacked = false
 
 func _ready():
 	lifes = 6
-	direction = Vector2.RIGHT
 	has_gravity = true
 	
 func check_view():
+	check_sides()
+	$view_field.force_raycast_update()
 	if $view_field.is_colliding():
-		current_state = ATTACK
-		return true
+		if $view_field.get_collider().name=="Player":
+			current_state = ATTACK
+			return true
+	return false
+
+func check_sides():
+	match current_side:	
+		Sides.LEFT:
+			direction.x = -1
+			$texture.flip_h = false
+			$view_field.cast_to.x*=-1 if sign($view_field.cast_to.x)==1 else 1
+			$bullet_spawn.position.x*=-1 if sign($bullet_spawn.position.x)==1 else 1
+		
+		Sides.RIGHT:
+			direction.x = 1
+			$texture.flip_h = true
+			$view_field.cast_to.x*=-1 if sign($view_field.cast_to.x)==-1 else 1
+			$bullet_spawn.position.x*=-1 if sign($bullet_spawn.position.x)==-1 else 1
 
 func attack():
 	if $animation.current_animation == "attack" and $animation.current_animation_position>=0.45 and !attacked:
 		make_bullet()
 		attacked = true
-	
-	
-func change_side():
-	direction.x*=-1
-	$bullet_spawn.position.x*=-1
-	$texture.scale.x*=-1
-	$view_field.cast_to.x*=-1
 	
 func make_bullet():
 	var new_bullet = bullet_instance.instance()

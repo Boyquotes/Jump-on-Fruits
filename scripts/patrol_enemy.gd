@@ -1,22 +1,21 @@
 extends Enemy
 
 class_name Patrol_Enemy
-var attacking_unity = false
 
 enum{PATROL = 2, IDLE}
 
 
 func _ready():
-	direction = Vector2(1, 0)
-	$texture.scale.x*=direction.x
-	$wall_check.scale.x*=direction.x
+	attacking_unity = false
 	current_state = PATROL
+	direction.x = 1
 
 func _physics_process(delta):
 	check_states(delta)
 			
 	if current_state!=DEAD:
 		check_animations()
+		check_sides()
 
 func check_states(delta):
 	match(current_state):
@@ -36,16 +35,25 @@ func check_states(delta):
 	movement = move_and_slide(movement)
 		
 func patrol():
+	check_sides()
 	movement.x = direction.x*speed
-	if check_sides():
+	if check_wall():
 		current_state = IDLE
 
-func change_side():
-	direction.x *= -1
-	$texture.scale.x *= -1
-	$wall_check.cast_to.x*= -1
-
 func check_sides():
+	match current_side:	
+		Sides.LEFT:
+			direction.x = -1
+			$wall_check.cast_to.x*=-1 if sign($wall_check.cast_to.x)==1 else 1
+			$texture.flip_h = false
+		
+		Sides.RIGHT:
+			direction.x = 1
+			$wall_check.cast_to.x*=-1 if sign($wall_check.cast_to.x)==-1 else 1
+			$texture.flip_h = true
+		
+func check_wall():
+	$wall_check.force_raycast_update()
 	if $wall_check.is_colliding():
 		return true
 		
@@ -71,12 +79,11 @@ func check_animations():
 		$animation.play(current)
 		
 func _on_animation_animation_finished(anim_name):
-
 	match anim_name:
 		"hit":
 			current_state = PATROL
 			$hurtbox/area.set_deferred("disabled", false)
 		"idle":
-			current_state = PATROL
 			change_side()
+			current_state = PATROL
 

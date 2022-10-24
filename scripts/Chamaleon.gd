@@ -5,7 +5,6 @@ enum{ATTACK = 4}
 func _ready():
 	lifes = 3
 	has_gravity = true
-	$view_field.cast_to.x *= direction.x
 
 func _physics_process(delta):
 	if $view_field.is_colliding():
@@ -30,12 +29,23 @@ func check_states(delta):
 		
 	movement = move_and_slide(movement)	
 
-func change_side():
-	direction.x *= -1
-	$texture.scale.x *= -1
-	$wall_check.cast_to.x*= -1
-	$view_field.cast_to.x*=-1
-	$tongue/tongue_area.position.x*=-1
+func check_sides():
+	match current_side:	
+		Sides.LEFT:
+			direction.x = -1
+			$wall_check.cast_to.x*=-1 if sign($wall_check.cast_to.x)==1 else 1
+			$view_field.cast_to.x*=-1 if sign($view_field.cast_to.x)==1 else 1
+			$tongue/tongue_area.position.x*=-1 if sign($tongue/tongue_area.position.x)==1 else 1
+			$texture.position.x = -32
+			$texture.flip_h = false
+		
+		Sides.RIGHT:
+			direction.x = 1
+			$wall_check.cast_to.x*=-1 if sign($wall_check.cast_to.x)==-1 else 1
+			$view_field.cast_to.x*=-1 if sign($view_field.cast_to.x)==-1 else 1
+			$tongue/tongue_area.position.x*=-1 if sign($tongue/tongue_area.position.x)==-1 else 1
+			$texture.flip_h = true
+			$texture.position.x = 3
 
 func check_animations():
 	var current = "idle" 

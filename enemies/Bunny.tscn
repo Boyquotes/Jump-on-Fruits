@@ -435,9 +435,9 @@ collision_layer = 8
 collision_mask = 98
 script = ExtResource( 1 )
 speed = 123
+first_side = null
 
 [node name="texture" type="Sprite" parent="."]
-scale = Vector2( -1, 1 )
 texture = ExtResource( 2 )
 hframes = 8
 
@@ -471,13 +471,13 @@ scale = Vector2( 1.4, 1.55 )
 [node name="wall_check" type="RayCast2D" parent="."]
 position = Vector2( 0, 13 )
 enabled = true
-cast_to = Vector2( 15, 0 )
+cast_to = Vector2( -15, 0 )
 collision_mask = 2
 
 [node name="wall_check2" type="RayCast2D" parent="."]
 position = Vector2( 0, 2 )
 enabled = true
-cast_to = Vector2( 15, 0 )
+cast_to = Vector2( -15, 0 )
 collision_mask = 2
 
 [node name="ground_check" type="RayCast2D" parent="."]
@@ -487,7 +487,7 @@ collision_mask = 66
 
 [node name="view_field" type="RayCast2D" parent="."]
 enabled = true
-cast_to = Vector2( 250, 0 )
+cast_to = Vector2( -250, 0 )
 
 [connection signal="animation_finished" from="animation" to="." method="_on_animation_animation_finished"]
 [connection signal="body_entered" from="hurtbox" to="." method="_on_hurtbox_body_entered"]
