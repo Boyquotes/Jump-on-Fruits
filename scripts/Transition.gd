@@ -64,6 +64,14 @@ func make_transition(delay):
 	fade_in(delay)
 	yield(fx, "tween_completed")
 	fade_out(delay)
-	
+
+func make_respawn_transition():
+	fx.remove_all()
+	fx.interpolate_property(get_node("fast_overlay"), "color:a", 0, 255, 1, Tween.TRANS_EXPO, Tween.EASE_IN_OUT, 0)
+	fx.start()
+	yield(fx, "tween_completed")
+	fx.remove_all()
+	fx.interpolate_property(get_node("fast_overlay"), "color:a", 255, 0, 1, Tween.TRANS_EXPO, Tween.EASE_IN_OUT, 0)
+	fx.start()
 
 

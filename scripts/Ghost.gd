@@ -17,8 +17,9 @@ func check_state(delta):
 		DEAD:
 			apply_gravity(delta, true)
 		HITTED:
-			movement = Vector2.ZERO
+			pass
 		IDLE:
+			$hitbox.set_deferred("disabled", true)
 			movement = Vector2.ZERO
 		ATTACK:
 			attack()
@@ -31,18 +32,17 @@ func check_state(delta):
 func attack():
 	
 	if target.global_position.x>global_position.x:
-		current_side = Sides.LEFT
-	else: 
 		current_side = Sides.RIGHT
+	else: 
+		current_side = Sides.LEFT
 	
 	if speed>0:
-		movement = direction*speed
 		speed -= 5
 	else:
-		$hurtbox.set_deferred("monitoring", true)
-		$hitbox.set_deferred("disabled", true)
 		current_state = IDLE
+		$hurtbox.set_deferred("monitoring", true)
 		$cooldown.start()
+	movement = direction*speed
 		
 func check_sides():
 	match current_side:	
@@ -78,12 +78,14 @@ func _on_animation_animation_finished(anim_name):
 			$hitbox.set_deferred("disabled", true)
 			$hurtbox.set_deferred("monitoring", false)
 			$action_area.set_deferred("monitoring", false)
+			$ghost_light.visible = false
 			$wait.wait_time = rand_range(4,21)
 			visible = false
 			$wait.start()
 			current_state = IDLE
 		"appear":
 			$hitbox.set_deferred("disabled", false)
+			$ghost_light.visible = true
 			current_state = ATTACK
 
 func _on_action_area_body_entered(body):
@@ -94,19 +96,19 @@ func _on_action_area_body_entered(body):
 func _on_wait_timeout():
 	
 	var new_position = Vector2.ZERO
-	new_position = Vector2(rand_range(target.global_position.x-100,target.global_position.x+100),rand_range(target.global_position.y-100,target.global_position.y+100))
-	if new_position.distance_to(target.global_position)<40:
+	new_position = Vector2(rand_range(target.global_position.x-80,target.global_position.x+80),rand_range(target.global_position.y-80,target.global_position.y+80))
+	if new_position.distance_to(target.global_position)<60:
 		if target.global_position.x>new_position.x:
-			new_position.x -= rand_range(30,50)
+			new_position.x -= rand_range(50,60)
 			
 		else: 
-			new_position.x += rand_range(30,50)
+			new_position.x += rand_range(50,60)
 			
 		if target.global_position.y>new_position.y:
-			new_position.y -= rand_range(30,50)
+			new_position.y -= rand_range(50,60)
 			
 		else: 
-			new_position.y += rand_range(30,50)
+			new_position.y += rand_range(50,60)
 			
 	global_position = new_position
 	visible = true

@@ -28,6 +28,8 @@ func check_sides():
 			$texture.flip_h = true
 
 func check_wall():
+	$wall_check.force_raycast_update()
+	$wall_check2.force_raycast_update()
 	if $wall_check.is_colliding() or $wall_check2.is_colliding():
 			return true
 	return false

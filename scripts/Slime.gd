@@ -28,13 +28,15 @@ func dies():
 			var replic = self.duplicate()
 			replic.this_life*=0.5
 			replic.scale *= 0.75
-			replic.position.x = global_position.x+rand_range(-10,10)
+			replic.position.x = global_position.x+rand_range(-30,30)
 			replic.position.y = global_position.y
 			replic.speed = rand_range(speed*2,speed*4)
 			replic.step = step+1
 			if i==0 or i==2:
+				replic.current_side = Sides.LEFT
+			else: 
 				replic.current_side = Sides.RIGHT
-			
+				
 			get_parent().call_deferred("add_child",replic)
 				
 			queue_free()

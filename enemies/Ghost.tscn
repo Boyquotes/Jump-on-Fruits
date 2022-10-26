@@ -1,10 +1,11 @@
-[gd_scene load_steps=16 format=2]
+[gd_scene load_steps=17 format=2]
 
 [ext_resource path="res://scripts/Ghost.gd" type="Script" id=1]
 [ext_resource path="res://Pixel Adventure 2/Enemies/Ghost/Desappear (44x30).png" type="Texture" id=2]
 [ext_resource path="res://Pixel Adventure 2/Enemies/Ghost/Idle (44x30).png" type="Texture" id=3]
 [ext_resource path="res://Pixel Adventure 2/Enemies/Ghost/Appear (44x30).png" type="Texture" id=4]
 [ext_resource path="res://Pixel Adventure 2/Enemies/Ghost/Hit (44x30).png" type="Texture" id=5]
+[ext_resource path="res://assets_by_yago/light.png" type="Texture" id=6]
 
 [sub_resource type="Animation" id=3]
 length = 0.001
@@ -430,6 +431,18 @@ shape = SubResource( 10 )
 [node name="cooldown" type="Timer" parent="."]
 wait_time = 3.0
 one_shot = true
+
+[node name="ghost_light" type="Light2D" parent="."]
+texture = ExtResource( 6 )
+texture_scale = 0.4
+color = Color( 0.815686, 0.980392, 0.984314, 1 )
+energy = 1.1
+range_layer_min = -3
+range_item_cull_mask = 3
+shadow_gradient_length = 1.0
+shadow_filter = 3
+shadow_filter_smooth = 3.0
+shadow_item_cull_mask = 3
 
 [connection signal="animation_finished" from="animation" to="." method="_on_animation_animation_finished"]
 [connection signal="body_entered" from="hurtbox" to="." method="_on_hurtbox_body_entered"]

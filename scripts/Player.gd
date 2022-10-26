@@ -63,13 +63,14 @@ func move_input():
 		position.y +=2
 		
 func _input(event: InputEvent) -> void:
-	if !hitted and !died:
+	if !died:
 		if event.is_action_pressed("jump") and !Input.is_action_pressed("go_down"):
 			if !grabing_wall():
 				if is_grounded():
 					speed[1] = -jump_force/2
 					
 				elif jumps>0:
+					make_dust()
 					speed[1] = -jump_force/2
 					jumps-=1
 			else:
@@ -135,10 +136,11 @@ func is_grounded():
 	return false
 	
 func apply_gravity(delta):
-	speed[1] += gravity*delta
+	if speed[1]<450:
+		speed[1] += gravity*delta
 
 func _on_hurtbox_body_entered(body):
-	var specials = ["saw", "Fallzone", "spike_ball", "Railgun"]
+	var specials = ["saw", "Fallzone", "spike_ball", "Railgun", "Spikes"]
 	var immunity_frames = 1
 	life-=1
 	emit_signal("change_life", life, max_life)
@@ -148,9 +150,10 @@ func _on_hurtbox_body_entered(body):
 	hitted = true
 	if specials.has(body.name) and !is_grounded() and life>0:
 		respawn_after_hit(body)
-		immunity_frames = 3
+		immunity_frames = 2
 	else: 
-		on_knockback(body)
+		if body.name!="Spikes":
+			on_knockback(body)
 	#immunity frames	
 	get_node("hurtbox/shape").set_deferred("disabled", true)
 	yield(get_tree().create_timer(immunity_frames),"timeout")
@@ -167,9 +170,10 @@ func on_knockback(colisor):
 		var colisor_dir = sign(colisor_velocity)
 		if colisor_dir !=0 and colisor_dir!=last_dir and colisor_velocity!=0:
 			knockback_dir = colisor_dir
-		if colisor.name=="Rhino" and colisor_velocity!=0:
+		if colisor.name.begins_with("Rhino") and colisor_velocity!=0:
 			colisor_velocity*=8
 			speed[1]-=300
+			
 		speed[0] += knockback_dir*knockback_int+colisor_velocity
 	else:
 		knockback_dir = -last_dir
@@ -186,8 +190,11 @@ func get_collisions():
 		if collider_obj!=null:
 			if collider_obj.collider.has_method("collide_with"):
 				collider_obj.collider.collide_with(collider_obj, self)
-				
-			
+		
+			if collider_obj.collider.name=="hurtbox":
+					collider_obj.collider.get_parent().take_hit()
+					speed[1]=-345
+					jumps = 1
 		
 			
 func dies():
@@ -201,10 +208,10 @@ func dies():
 		Global._reset_current()
 	
 func respawn_after_hit(body):
-	Transition.make_transition(0)
+	Transition.make_respawn_transition()
 	get_node("hurtbox/shape").set_deferred("disabled", true)
 	freezed = true
-	yield(get_tree().create_timer(2), "timeout")
+	yield(get_tree().create_timer(1.3), "timeout")
 	freezed = false
 	get_node("hurtbox/shape").set_deferred("disabled", false)
 	if last_ground!=null:

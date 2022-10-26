@@ -5,11 +5,12 @@ enum{PREPARING = 4, ATTACKING}
 var jump_force = 330
 
 func _ready():
-	lifes = 2
+	lifes = 3
 	has_gravity = true
 	current_state = IDLE
 	
 func check_state(delta):
+	check_sides()
 	match current_state:
 		DEAD:
 			apply_gravity(delta, true)
@@ -25,6 +26,8 @@ func check_state(delta):
 			
 		ATTACKING:
 			if $ground_check.is_colliding() and movement.y==0:
+				if !check_view():
+					change_side()
 				current_state = IDLE
 				$view_cooldown.start()
 				
@@ -36,7 +39,21 @@ func check_state(delta):
 	
 	movement = move_and_slide(movement)
 
+func check_sides():
+	match current_side:	
+		Sides.LEFT:
+			direction.x = -1
+			$texture.flip_h = false
+			$view_field.cast_to.x *= -1 if sign($view_field.cast_to.x)==1 else 1
+			
+		Sides.RIGHT:
+			direction.x = 1
+			$texture.flip_h = true	
+			$view_field.cast_to.x *= -1 if sign($view_field.cast_to.x)==-1 else 1
+	
+
 func check_view():
+	$view_field.force_raycast_update()
 	if $view_field.is_colliding():
 		current_state = PREPARING
 		return true

@@ -10,6 +10,7 @@ func collide_with(this, player):
 	force = global_position.direction_to($trampoline_target.global_position)
 	player.speed = 0
 	player.speed = power*force
+	player.jumps = 1
 
 func _on_animation_animation_finished(anim_name):
 	if anim_name == "triggered":

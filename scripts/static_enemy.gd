@@ -9,18 +9,18 @@ func _ready():
 	attacking_unity = false
 	
 func _physics_process(delta):
+	check_sides()
 	check_state(delta)
 	if current_state!=DEAD:
 		check_animations()
 
 
 func check_state(delta):
-	check_view()
 	match current_state:
 		DEAD:
 			apply_gravity(delta, true)
 		HITTED:
-			movement.x = 0
+			pass
 		IDLE:
 			check_view()
 			movement.x = 0

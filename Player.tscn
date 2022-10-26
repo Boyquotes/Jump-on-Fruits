@@ -1,4 +1,4 @@
-[gd_scene load_steps=21 format=2]
+[gd_scene load_steps=22 format=2]
 
 [ext_resource path="res://Pixel Adventure 1/Free/Main Characters/Ninja Frog/Double Jump (32x32).png" type="Texture" id=1]
 [ext_resource path="res://Pixel Adventure 1/Free/Main Characters/Ninja Frog/Run (32x32).png" type="Texture" id=2]
@@ -9,6 +9,7 @@
 [ext_resource path="res://Pixel Adventure 1/Free/Main Characters/Ninja Frog/Hit (32x32).png" type="Texture" id=7]
 [ext_resource path="res://scripts/PlayerCamera.gd" type="Script" id=8]
 [ext_resource path="res://Pixel Adventure 1/Free/Main Characters/Ninja Frog/Wall Jump (32x32).png" type="Texture" id=9]
+[ext_resource path="res://assets_by_yago/light2.jpg" type="Texture" id=10]
 
 [sub_resource type="RectangleShape2D" id=13]
 extents = Vector2( 9.5, 12 )
@@ -339,6 +340,7 @@ tracks/4/keys = {
 resource_name = "Run"
 length = 1.2
 loop = true
+step = 0.05
 tracks/0/type = "value"
 tracks/0/path = NodePath("Texture:texture")
 tracks/0/interp = 1
@@ -523,7 +525,7 @@ script = ExtResource( 8 )
 [node name="hurtbox" type="Area2D" parent="."]
 position = Vector2( 0, -2 )
 collision_layer = 32
-collision_mask = 24
+collision_mask = 16
 
 [node name="shape" type="CollisionShape2D" parent="hurtbox"]
 modulate = Color( 0.262745, 0.258824, 1, 1 )
@@ -553,6 +555,22 @@ position = Vector2( 8, 0 )
 [node name="dust_cooldown" type="Timer" parent="."]
 wait_time = 0.2
 autostart = true
+
+[node name="player_light" type="Light2D" parent="."]
+position = Vector2( -1, -3 )
+scale = Vector2( 1.19565, 1.16345 )
+enabled = false
+texture = ExtResource( 10 )
+texture_scale = 1.19
+energy = 0.8
+range_layer_min = -3
+range_item_cull_mask = 3
+shadow_enabled = true
+shadow_buffer_size = 2069
+shadow_gradient_length = 1.4
+shadow_filter = 3
+shadow_filter_smooth = 4.0
+shadow_item_cull_mask = 3
 
 [connection signal="body_entered" from="hurtbox" to="." method="_on_hurtbox_body_entered"]
 [connection signal="timeout" from="dust_cooldown" to="." method="_on_dust_cooldown_timeout"]

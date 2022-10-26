@@ -15,6 +15,7 @@ onready var last_point = laser.get_point_count()-1
 func _ready():
 	laser.width = laser_width
 	collision_raycast.cast_to.x = 0
+	$laser.set_point_position(0, Vector2(0,6))
 	
 
 func _physics_process(delta):
@@ -39,6 +40,8 @@ func check_collision():
 func update_ray():
 	$damage_area.position.y = laser_end.position.y/2
 	$damage_area/damage.shape.extents.y = laser_end.position.y/2
+	$laser_light.scale.y = laser_end.position.y/200
+	$laser_light.position.y = laser_end.position.y/2
 	laser.set_point_position(last_point, laser_end.position)
 	$particles/wall_particles.position = laser_end.position
 	$particles/laser_particles.position.y = laser_end.position.y/2
@@ -49,6 +52,8 @@ func open_laser():
 	$Tween.remove_all()
 	$Tween.interpolate_property(self, "laser_width", 0, 12, 0.2,Tween.TRANS_LINEAR, Tween.EASE_IN_OUT, 0)
 	$Tween.start()
+	$laser_light.enabled = true
+	$fade_light.enabled = true
 	
 	for particle in $particles.get_children():
 		particle.emitting = true
@@ -68,6 +73,8 @@ func close_laser():
 		particle.emitting = false
 		
 	yield($Tween, "tween_completed")
+	$laser_light.enabled = false
+	$fade_light.enabled = false
 	$damage_area/damage.set_deferred("disabled", true)
 	$AnimationPlayer.play("idle")
 	
