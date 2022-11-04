@@ -3,13 +3,16 @@ extends KinematicBody2D
 var direction = Vector2.ZERO
 var speed = 340
 var duration = 15
+var destroyed = false
 var movement = Vector2.ZERO
-var piece_resource = preload("res://Pixel Adventure 2/Enemies/Plant/Bullet Pieces.png")
-var remains = preload("res://projectiles/remains.tscn")
+var piece_resource = null 
+var bullet_texture = null
+var remains =  preload("res://projectiles/remains.tscn") 
 
 
 func _ready():
 	$Timer.wait_time = duration
+	$Sprite.texture = bullet_texture
 	$Timer.start()
 
 func _physics_process(delta):
@@ -34,9 +37,11 @@ func instance_remain(sprite_frame):
 	
 func destroy():
 	var index = 0
-	while index<2:
-		instance_remain(index)
-		index+=1
+	if !destroyed:
+		while index<2:
+			instance_remain(index)
+			index+=1
+	destroyed = true
 	queue_free()
 
 

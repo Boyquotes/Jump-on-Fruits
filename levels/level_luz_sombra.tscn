@@ -259,10 +259,10 @@ shape = SubResource( 6 )
 [node name="Player" parent="." instance=ExtResource( 1 )]
 position = Vector2( 113, -69 )
 
-[node name="MainCamera" parent="Player" index="4"]
+[node name="MainCamera" parent="Player" index="3"]
 zoom = Vector2( 1, 1 )
 
-[node name="player_light" parent="Player" index="10"]
+[node name="player_light" parent="Player" index="9"]
 enabled = true
 
 [editable path="Ghost"]

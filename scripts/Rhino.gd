@@ -1,17 +1,20 @@
 extends Static_Enemy
 
+var collided = false
 
 func _ready():
 	lifes = 5
 	has_gravity = true
 
+
 func check_view():
 	$view_field.force_raycast_update()
-	if $view_field.is_colliding():
+	if $view_field.is_colliding() and current_state==IDLE:
 		if $view_field.get_collider().name=="Player":
 			$view_change.stop()
 			yield(get_tree().create_timer(0.5),"timeout")
-			current_state = ATTACK
+			if current_state!=DEAD:
+				current_state = ATTACK
 	
 func check_sides():
 	match current_side:	
@@ -30,15 +33,25 @@ func check_sides():
 			$view_field.cast_to.x *= -1 if sign($view_field.cast_to.x)==-1 else 1
 	
 func attack():
-	movement.x = speed*direction.x
-	if $wall_check.is_colliding():
-		current_state = IDLE
-		Global.get_player_camera().shake(0.3, 6)
-		$view_change.start()
+	if !collided:
+		movement.x = direction.x*speed
+		$wall_check.force_raycast_update()
 		
-	elif !$ground_check.is_colliding():
-		current_state = IDLE
-		$view_change.start()
+		if $wall_check.is_colliding():
+			movement.y = -350
+			$animation.play("hit_wall")
+			Global.get_player_camera().shake(0.3, 6)
+			$view_change.start()
+			$pos_attack.start()
+			collided = true
+			
+		if !$ground_check.is_colliding():
+			current_state = IDLE
+			$view_change.start()
+	else:
+		movement.x = -direction.x*40
+		
+	
 
 
 func _on_view_change_timeout():
@@ -47,4 +60,33 @@ func _on_view_change_timeout():
 		$view_change.wait_time = rand_range(2.5, 7)
 
 func get_velocity():
+	if current_state == ATTACK:
+		return Vector2(movement.x*4, -150)
 	return movement
+
+
+func _on_pos_attack_timeout():
+	collided = false
+	current_state = IDLE
+
+func check_animations():
+	if $animation.current_animation!="hit_wall":
+		
+		var current = "idle"
+		
+		if current_state==ATTACK:
+			current = "attack"
+	
+		if current_state==HITTED:
+			current = "hit"
+	
+		if current!=$animation.current_animation:
+			$animation.play(current)
+
+func _on_animation_animation_finished(anim_name):
+	match anim_name:
+		"hit":
+			current_state = IDLE
+			$view_change.start()
+		"hit_wall":
+			$animation.play("idle")

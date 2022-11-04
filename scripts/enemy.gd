@@ -20,6 +20,7 @@ var attacking_unity = false
 
 
 func _ready():
+	$animation.playback_speed = 1.5
 	pass
 
 func apply_gravity(delta, enabled):
@@ -27,11 +28,13 @@ func apply_gravity(delta, enabled):
 		movement.y += gravity*delta
 
 func take_hit():
-	lifes -=1
-	if lifes <= 0:
-		dies()
-		return true
-	current_state = HITTED
+	if current_state!=DEAD:
+		if current_state!=HITTED:
+			lifes -=1
+			if lifes <= 0:
+				dies()
+				return true
+			current_state = HITTED
 
 func change_side():
 	if current_side == Sides.LEFT:
@@ -48,12 +51,6 @@ func dies():
 	$hitbox.set_deferred("disabled", true)
 	$hurtbox/area.set_deferred("disabled", true)
 	$animation.play("dead")
-
-func _on_hurtbox_body_entered(body):
-	if body.name=="Player" and current_state != DEAD:
-		body.speed[1]=-345
-		body.jumps = 1
-		take_hit()
 
 func check_animations():
 	pass

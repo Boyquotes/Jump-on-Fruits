@@ -12,20 +12,15 @@ const body_gravity = 1200
 var gravity = body_gravity
 var jump_force = 720
 var dir = 0
-var grab_dir = 0
 var jumps = 1
 var last_dir = 1
 var hitted = false
-var knockback_dir = 0
-var knockback_int = 780
 var last_ground = null
 var let_dust = false
 var freezed = false
 
 onready var root = get_tree().get_root()
 var dust_instance = preload("res://projectiles/dust.tscn")
-
-onready var ground_raycasts = $RayCasts_ground
 
 signal change_life(life, max_life)
 
@@ -42,15 +37,11 @@ func _physics_process(delta:float) -> void:
 		move_input()
 	
 		if !freezed:
-		
-			
 			speed[0] = lerp(speed[0], move_speed*dir, 0.2)
-				
-			apply_gravity(delta)
 		else:
 			speed = Vector2.ZERO
-	else:
-		apply_gravity(delta)	
+	
+	apply_gravity(delta)	
 	speed = move_and_slide(speed, up)
 	#print(speed)
 	
@@ -65,7 +56,7 @@ func move_input():
 func _input(event: InputEvent) -> void:
 	if !died:
 		if event.is_action_pressed("jump") and !Input.is_action_pressed("go_down"):
-			if !grabing_wall():
+			if !in_wall():
 				if is_grounded():
 					speed[1] = -jump_force/2
 					
@@ -74,22 +65,15 @@ func _input(event: InputEvent) -> void:
 					speed[1] = -jump_force/2
 					jumps-=1
 			else:
-				speed[0] -= 200*grab_dir
+				speed[0] -= 200*$Texture.scale.x
 				speed[1] = -jump_force/2
 			
-func grabing_wall():
-	
-	for raycast in $wall_raycasts.get_children():
-		if !raycast.is_colliding():
-			continue
-			
-		if !is_grounded():
-			
-			$Texture.scale.x = sign(raycast.cast_to.x)
-			grab_dir = sign(raycast.cast_to.x)
-			speed[1] *= 0.75
-			jumps = 1
-			return true
+func in_wall():
+
+	if !is_grounded() and is_on_wall():
+		jumps = 1
+		speed[1]*=0.75
+		return true
 			
 	return false
 		
@@ -107,7 +91,7 @@ func set_animation():
 			current = "Fall"
 		elif jumps==0:
 			current="Double_Jump"
-		if grabing_wall():
+		if in_wall():
 			current = "wall_jump"
 		
 	if hitted:
@@ -129,10 +113,9 @@ func set_animation():
 	
 	
 func is_grounded():
-	for raycast in ground_raycasts.get_children():
-		if raycast.is_colliding() && speed[1] == 0:
-			jumps = 1
-			return true
+	if is_on_floor():
+		jumps = 1
+		return true
 	return false
 	
 func apply_gravity(delta):
@@ -146,8 +129,13 @@ func _on_hurtbox_body_entered(body):
 	emit_signal("change_life", life, max_life)
 	if life<=0:
 		dies()
+		if body.name!="Spikes":
+			on_knockback(body)
 		return false
 	hitted = true
+	if body.has_method("destroy"):
+		body.destroy()
+		
 	if specials.has(body.name) and !is_grounded() and life>0:
 		respawn_after_hit(body)
 		immunity_frames = 2
@@ -162,22 +150,32 @@ func _on_hurtbox_body_entered(body):
 	
 	
 func on_knockback(colisor):
-	if colisor.has_method("destroy"):
-		colisor.destroy()
-		
+	
 	if colisor.has_method("get_velocity"):
-		var colisor_velocity = colisor.get_velocity().x
-		var colisor_dir = sign(colisor_velocity)
-		if colisor_dir !=0 and colisor_dir!=last_dir and colisor_velocity!=0:
-			knockback_dir = colisor_dir
-		if colisor.name.begins_with("Rhino") and colisor_velocity!=0:
-			colisor_velocity*=8
-			speed[1]-=300
-			
-		speed[0] += knockback_dir*knockback_int+colisor_velocity
-	else:
-		knockback_dir = -last_dir
-		speed[0] += knockback_dir*knockback_int
+		var colisor_velocity = colisor.get_velocity()
+		#converte a velocidade para positivo
+		colisor_velocity.x*=-1 if(sign(colisor_velocity.x)==-1) else 1
+		
+		#Atualizar raycasts
+		$sides_raycasts/left.force_raycast_update()
+		$sides_raycasts/right.force_raycast_update()
+		
+		var direction = 0
+		if $sides_raycasts/left.is_colliding():
+			direction = 1
+		elif $sides_raycasts/right.is_colliding():
+			direction = -1
+		else:
+			direction = sign(colisor_velocity.x) if sign(colisor_velocity.x)!=0 else -last_dir
+		
+		
+		if colisor_velocity.x == 0 || colisor_velocity.x<300:
+			colisor_velocity.x = 300
+		
+		colisor_velocity.x*= direction	
+		speed = colisor_velocity
+		
+		
 		
 	
 
@@ -192,7 +190,10 @@ func get_collisions():
 				collider_obj.collider.collide_with(collider_obj, self)
 		
 			if collider_obj.collider.name=="hurtbox":
-					collider_obj.collider.get_parent().take_hit()
+					if collider_obj.collider.get_parent().has_method("take_hit"):
+						collider_obj.collider.get_parent().take_hit()
+					elif collider_obj.collider.get_parent().has_method("destroy"):
+						collider_obj.collider.get_parent().destroy()
 					speed[1]=-345
 					jumps = 1
 		
@@ -200,8 +201,8 @@ func get_collisions():
 func dies():
 	if !died:
 		died = true
-		speed = Vector2.ZERO
-		speed[1] = -200
+		#speed = Vector2.ZERO
+		#speed[1] = -200
 		emit_signal("change_life", 0, max_life)
 		get_node("HitBox").set_deferred("disabled", true)
 		yield(get_tree().create_timer(3),"timeout")
@@ -234,7 +235,7 @@ func make_dust():
 	dust.position.y = position.y+$dust_origin.position.y
 	dust.scale.x = sign($Texture.scale.x)
 	
-	if grabing_wall():
+	if in_wall():
 		dust.rotation_degrees = 90
 		dust.position.x = position.x+$dust_wall_origin.position.x*sign($Texture.scale.x)
 		dust.position.y = position.y+$dust_wall_origin.position.y

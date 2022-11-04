@@ -1,6 +1,6 @@
 extends Static_Enemy
 
-var bullet_instance = preload("res://projectiles/Plant_Bullet.tscn")
+var bullet_instance = preload("res://projectiles/Bullet.tscn")
 var attacked = false
 
 func _ready():
@@ -37,6 +37,8 @@ func attack():
 	
 func make_bullet():
 	var new_bullet = bullet_instance.instance()
+	new_bullet.bullet_texture = preload("res://Pixel Adventure 2/Enemies/Plant/Bullet.png")
+	new_bullet.piece_resource = preload("res://Pixel Adventure 2/Enemies/Plant/Bullet Pieces.png")
 	new_bullet.direction = direction
 	new_bullet.speed = rand_range(150,280)
 	new_bullet.position = $bullet_spawn.global_position

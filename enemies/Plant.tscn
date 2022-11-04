@@ -295,13 +295,14 @@ anims/idle = SubResource( 6 )
 position = Vector2( 0.5, 3 )
 shape = SubResource( 1 )
 
-[node name="hurtbox" type="Area2D" parent="."]
+[node name="hurtbox" type="StaticBody2D" parent="."]
 collision_layer = 8
 
 [node name="area" type="CollisionShape2D" parent="hurtbox"]
 modulate = Color( 0.388235, 0.937255, 0.192157, 1 )
 position = Vector2( 0.5, -14 )
 shape = SubResource( 2 )
+one_way_collision = true
 
 [node name="VisibilityNotifier2D" type="VisibilityNotifier2D" parent="."]
 position = Vector2( 0.499999, -0.5 )
@@ -320,6 +321,5 @@ autostart = true
 position = Vector2( -11, -10 )
 
 [connection signal="animation_finished" from="animation" to="." method="_on_animation_animation_finished"]
-[connection signal="body_entered" from="hurtbox" to="." method="_on_hurtbox_body_entered"]
 [connection signal="screen_exited" from="VisibilityNotifier2D" to="." method="_on_VisibilityNotifier2D_screen_exited"]
 [connection signal="timeout" from="view_change" to="." method="_on_view_change_timeout"]

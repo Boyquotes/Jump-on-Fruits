@@ -421,7 +421,6 @@ extents = Vector2( 10, 2 )
 collision_layer = 8
 collision_mask = 3
 script = ExtResource( 1 )
-first_side = null
 
 [node name="texture" type="Sprite" parent="."]
 
@@ -439,13 +438,14 @@ anims/preparing = SubResource( 10 )
 [node name="hitbox" type="CollisionShape2D" parent="."]
 shape = SubResource( 1 )
 
-[node name="hurtbox" type="Area2D" parent="."]
+[node name="hurtbox" type="StaticBody2D" parent="."]
 collision_layer = 8
 
 [node name="area" type="CollisionShape2D" parent="hurtbox"]
 modulate = Color( 0.388235, 0.937255, 0.192157, 1 )
 position = Vector2( 0, -11 )
 shape = SubResource( 2 )
+one_way_collision = true
 
 [node name="VisibilityNotifier2D" type="VisibilityNotifier2D" parent="."]
 
@@ -459,5 +459,4 @@ enabled = true
 cast_to = Vector2( -85, 0 )
 
 [connection signal="animation_finished" from="animation" to="." method="_on_animation_animation_finished"]
-[connection signal="body_entered" from="hurtbox" to="." method="_on_hurtbox_body_entered"]
 [connection signal="screen_exited" from="VisibilityNotifier2D" to="." method="_on_VisibilityNotifier2D_screen_exited"]

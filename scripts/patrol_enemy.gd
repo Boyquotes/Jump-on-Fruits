@@ -58,13 +58,14 @@ func check_wall():
 		return true
 		
 func take_hit():
-	if current_state!=HITTED:
-		lifes -=1
-		if lifes <= 0:
-			dies()
-			return true
-		current_state = HITTED
-		$hurtbox/area.set_deferred("disabled", true)
+	if current_state!=DEAD:
+		if current_state!=HITTED:
+			lifes -=1
+			if lifes <= 0:
+				dies()
+				return true
+			current_state = HITTED
+			$hurtbox/area.set_deferred("disabled", true)
 	
 func check_animations():
 	var current = "idle" 
