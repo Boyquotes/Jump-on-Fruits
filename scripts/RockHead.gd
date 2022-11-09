@@ -1,139 +1,110 @@
 extends KinematicBody2D
 
-var velocity = Vector2.ZERO
-var direction = Vector2.ZERO
-var dashing = false
-
-export var acceleration = 0.08
-export var speed = 92
-export var delay = 1.2
-
-onready var timer = $Timer
-var time_started = false
-var current_target = null 
-#onready var root = get_tree().get_root()
-onready var damage_box = get_node("damage_box/box")
-const DAMAGE_BOX_DISTANCE = 17
+enum Directions{LEFT, RIGHT, UP, DOWN}
+export(Array, int) var pattern = [Directions.RIGHT, Directions.DOWN, Directions.LEFT, Directions.UP]
+export(float) var speed = 250
+var visible_screen = false
+var bodies = []
+var cooldown = 2
+var direction
+var dir = Vector2.ZERO 
+var movement = Vector2.ZERO
+var current_index
+var current_animation = "blink_eye"
+var stopped = false
 
 func _ready():
-	$Timer.wait_time = delay
-	for raycast in $ray_casts.get_children():
-		raycast.cast_to *= $action_area/area.shape.radius
-	_check_terrain()
-
-# All move functions:
+	current_index = 0
+	cooldown = speed/(speed*2)
+	$animation.playback_speed = speed/100
+	direction = pattern[current_index]
+	$Timer.wait_time = cooldown
 
 func _physics_process(delta):
-	
-	#procura por alvo quando não estiver em dash
-	if !time_started and !dashing:
+	check_direction()
+	if !stopped:
+		movement = lerp(Vector2.ZERO, dir*speed, 0.05)
+		movement = move_and_collide(movement)
 		
-		for raycast in $ray_casts.get_children():
-				
-			if raycast.is_colliding():
+		if movement:
+			stopped = true
+			if visible_screen:
+				Global.get_player_camera().shake(0.2, 5)
 					
-				if raycast.get_collider().name == "Player":
-					var raycast_x = sign(raycast.cast_to.x)
-					var raycast_y = sign(raycast.cast_to.y)
-					time_started = true
-					timer.start()
-					
-					direction = Vector2(raycast_x, raycast_y)
-					damage_box.rotation_degrees = 90 if raycast_x == 0 else 0
-					damage_box.position = direction*DAMAGE_BOX_DISTANCE
-					break
-						
-				
-						
-	elif dashing:	
-		
-		velocity = lerp(Vector2.ZERO, direction*speed, acceleration)
+			collide_animation()
+			$Timer.start()
 	
-		var collision = move_and_collide(velocity)
+func check_direction():
+	match(direction):
+		Directions.LEFT:
+			dir = Vector2.LEFT
+			current_animation = "left"
+			$damage_area.rotation_degrees = 270
+			
+		Directions.RIGHT:
+			dir = Vector2.RIGHT
+			current_animation = "right"
+			$damage_area.rotation_degrees = 90
+			
+		Directions.UP:
+			dir = Vector2.UP
+			current_animation = "top"
+			$damage_area.rotation_degrees = 0
+			
+		Directions.DOWN:
+			dir = Vector2.DOWN
+			current_animation = "bottom"
+			$damage_area.rotation_degrees = 180
+
+func collide_animation():
+	if current_animation!= $animation.current_animation:
+		$animation.play(current_animation)
 	
-		if collision:
-			if collision.collider.name == "TileMap":
-				$damage_box/box.disabled = true
-				_check_terrain()
-				get_animation(direction)
-				set_collision_mask_bit(0, true)
-				Global.get_player_camera().shake(0.5, 3)
+func get_velocity():
+	return dir*800
+
+func _on_animation_animation_finished(animation):
+	match(animation):
+		"blink_eye":
+			$animation.play("active")
 			
-			if collision.collider.name == "Player":
-				set_collision_mask_bit(0, false)
-				
-				
-func _on_action_area_body_entered(body):
-	if body.name == "Player":
-		actives(body)
-
-func actives(target):
-	current_target = target
-	$animation.play("blink_eye")
-	_check_terrain()
-
-
-func _on_Timer_timeout():
-	dashing = true
-	time_started = false
-	$damage_box/box.disabled = false
-
-func _check_terrain():
-	#Checa se tem terreno dentro do alcance para colidir
-	for raycast in $ray_casts.get_children():
-		raycast.force_raycast_update()
-		raycast.set_collision_mask_bit(0, false)
-		raycast.enabled = true if raycast.is_colliding() else false
-		raycast.set_collision_mask_bit(0, true)
-
-	
-
-
-#All animation handlers
-
-
-func get_animation(direction):
-	var new_animation = ""
-	
-	match direction:
-		Vector2.LEFT:
-			new_animation = "left"
-			
-		Vector2.RIGHT:
-			new_animation = "right"
-			
-		Vector2.UP:
-			new_animation = "top"
-			
-		Vector2.DOWN:
-			new_animation = "bottom"
+		"close_eye":
+			$animation.play("idle")
 			
 		_:
-			new_animation = "active"
-				
-	if($animation.current_animation!=new_animation):
-		$animation.play(new_animation)
+			$animation.play("active")
 		
-			
-func _on_animation_animation_finished(nome):
-	var directionals = ["left", "right", "top", "bottom"]
-	if directionals.has(nome):
-		direction = Vector2.ZERO
-		timer.stop()
-		time_started = false
-		dashing = false
-		$animation.play("active")
-	
-	elif nome == "blink_eye":
-		$animation.play("active")
-		
-	elif nome=="close_eye":
-		$animation.play("idle")
-		
-	elif nome=="active":
-		if current_target == null:
-			$animation.play("close_eye")		
+func _on_Timer_timeout():
+	stopped = false
+	var next_target = current_index+1 if current_index+1<pattern.size() else 0
+	current_index = next_target
+	direction = pattern[next_target]
 
-func _on_action_area_body_exited(body):
-	current_target = null
-	$animation.play("close_eye")
+
+func _on_VisibilityNotifier2D_screen_entered():
+	visible_screen = true
+
+
+func _on_VisibilityNotifier2D_screen_exited():
+	visible_screen = false
+
+
+func _on_damage_area_body_entered(body):
+	bodies.append(body)
+	var wall = false
+	var player = false
+	for corpo in bodies:
+		if corpo is TileMap:
+			wall = true
+			continue
+		if corpo is KinematicBody2D:
+			if corpo.get_collision_layer_bit(0):
+				player = true
+				continue
+	if wall and player:	
+		$rock_head.set_collision_mask_bit(5, true)
+
+
+func _on_damage_area_body_exited(body):
+	bodies.remove(bodies.find(body))
+	$rock_head.set_collision_mask_bit(5, false)

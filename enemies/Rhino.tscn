@@ -373,6 +373,7 @@ collision_mask = 2
 position = Vector2( 0, 3 )
 enabled = true
 cast_to = Vector2( -142, 0 )
+collision_mask = 3
 
 [node name="ground_check" type="RayCast2D" parent="."]
 position = Vector2( -19, 10 )
@@ -384,7 +385,6 @@ collision_mask = 66
 autostart = true
 
 [node name="pos_attack" type="Timer" parent="."]
-wait_time = 0.5
 one_shot = true
 
 [connection signal="animation_finished" from="animation" to="." method="_on_animation_animation_finished"]

@@ -1,8 +1,9 @@
-[gd_scene load_steps=11 format=2]
+[gd_scene load_steps=15 format=2]
 
 [ext_resource path="res://scripts/Bird.gd" type="Script" id=1]
 [ext_resource path="res://Pixel Adventure 2/Enemies/BlueBird/Flying (32x32).png" type="Texture" id=2]
 [ext_resource path="res://Pixel Adventure 2/Enemies/BlueBird/Hit (32x32).png" type="Texture" id=3]
+[ext_resource path="res://Pixel Adventure 1/Free/Other/Dust Particle.png" type="Texture" id=4]
 
 [sub_resource type="Animation" id=3]
 length = 0.001
@@ -53,6 +54,18 @@ tracks/3/keys = {
 "transitions": PoolRealArray( 1 ),
 "update": 0,
 "values": [ 0.0 ]
+}
+tracks/4/type = "value"
+tracks/4/path = NodePath("wind:emitting")
+tracks/4/interp = 1
+tracks/4/loop_wrap = true
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 0,
+"values": [ false ]
 }
 
 [sub_resource type="Animation" id=4]
@@ -107,6 +120,18 @@ tracks/3/keys = {
 "update": 0,
 "values": [ 0.0, 359.0 ]
 }
+tracks/4/type = "value"
+tracks/4/path = NodePath("wind:emitting")
+tracks/4/interp = 1
+tracks/4/loop_wrap = true
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 1,
+"values": [ false ]
+}
 
 [sub_resource type="Animation" id=5]
 resource_name = "hit"
@@ -157,6 +182,18 @@ tracks/3/keys = {
 "transitions": PoolRealArray( 1 ),
 "update": 0,
 "values": [ 0.0 ]
+}
+tracks/4/type = "value"
+tracks/4/path = NodePath("wind:emitting")
+tracks/4/interp = 1
+tracks/4/loop_wrap = true
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 1,
+"values": [ false ]
 }
 
 [sub_resource type="Animation" id=8]
@@ -209,6 +246,18 @@ tracks/3/keys = {
 "transitions": PoolRealArray( 1 ),
 "update": 0,
 "values": [ 0.0 ]
+}
+tracks/4/type = "value"
+tracks/4/path = NodePath("wind:emitting")
+tracks/4/interp = 1
+tracks/4/loop_wrap = true
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/keys = {
+"times": PoolRealArray( 0, 0.4 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 1,
+"values": [ false, true ]
 }
 
 [sub_resource type="Animation" id=7]
@@ -263,12 +312,49 @@ tracks/3/keys = {
 "update": 0,
 "values": [ 0.0 ]
 }
+tracks/4/type = "value"
+tracks/4/path = NodePath("wind:emitting")
+tracks/4/interp = 1
+tracks/4/loop_wrap = true
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/keys = {
+"times": PoolRealArray( 0, 0.4 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 1,
+"values": [ false, true ]
+}
 
 [sub_resource type="RectangleShape2D" id=1]
 extents = Vector2( 13.5, 9.5 )
 
 [sub_resource type="RectangleShape2D" id=2]
 extents = Vector2( 12, 2 )
+
+[sub_resource type="Gradient" id=9]
+offsets = PoolRealArray( 0, 0.452756, 1 )
+colors = PoolColorArray( 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 0 )
+
+[sub_resource type="GradientTexture" id=10]
+gradient = SubResource( 9 )
+
+[sub_resource type="ParticlesMaterial" id=11]
+emission_shape = 5
+emission_ring_radius = 2.0
+emission_ring_inner_radius = 0.0
+emission_ring_height = 1.0
+emission_ring_axis = Vector3( 0, 0, 1 )
+flag_disable_z = true
+direction = Vector3( 0, 1, 0 )
+spread = 17.27
+gravity = Vector3( 0, 20, 0 )
+initial_velocity = 27.58
+initial_velocity_random = 1.0
+orbit_velocity = 0.0
+orbit_velocity_random = 0.0
+scale = 0.5
+scale_random = 1.0
+color_ramp = SubResource( 10 )
 
 [node name="Bird" type="KinematicBody2D"]
 collision_layer = 8
@@ -309,6 +395,18 @@ scale = Vector2( 1.75, 1.35 )
 enabled = true
 cast_to = Vector2( -15, 0 )
 collision_mask = 2
+
+[node name="wind" type="Particles2D" parent="."]
+position = Vector2( 13, 8 )
+emitting = false
+amount = 3
+lifetime = 0.5
+one_shot = true
+speed_scale = 1.9
+explosiveness = 0.85
+randomness = 1.0
+process_material = SubResource( 11 )
+texture = ExtResource( 4 )
 
 [connection signal="animation_finished" from="animation" to="." method="_on_animation_animation_finished"]
 [connection signal="screen_exited" from="VisibilityNotifier2D" to="." method="_on_VisibilityNotifier2D_screen_exited"]

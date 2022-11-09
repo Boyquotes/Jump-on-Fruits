@@ -12,7 +12,6 @@ func check_view():
 	if $view_field.is_colliding() and current_state==IDLE:
 		if $view_field.get_collider().name=="Player":
 			$view_change.stop()
-			yield(get_tree().create_timer(0.5),"timeout")
 			if current_state!=DEAD:
 				current_state = ATTACK
 	

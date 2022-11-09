@@ -1,9 +1,16 @@
 extends KinematicBody2D
 
+enum {DEAD, IDLE, MOVING, JUMP, HIT, GRAB, FALLING}
+enum PhyState{FREEZED, FREE, STOPPED}
+enum Side{LEFT, RIGHT}
+var current_state = IDLE
+var phy_state = PhyState.FREE
+export var current_side = Side.RIGHT
+var wall_jumped = false
 var died = false
 var speed = Vector2(0,0)
+var has_gravity = true
 var up = Vector2.UP
-var stop = false;
 var life = 4
 var max_life = 3
 onready var first_spawn = position
@@ -12,12 +19,13 @@ const body_gravity = 1200
 var gravity = body_gravity
 var jump_force = 720
 var dir = 0
-var jumps = 1
+var max_jumps = 2
+var jumps = max_jumps
 var last_dir = 1
-var hitted = false
 var last_ground = null
 var let_dust = false
 var freezed = false
+var can_grab = true
 
 onready var root = get_tree().get_root()
 var dust_instance = preload("res://projectiles/dust.tscn")
@@ -31,128 +39,213 @@ func _ready():
 	emit_signal("change_life", life, max_life)
 	
 func _physics_process(delta:float) -> void:
+	check_sides()
+	check_states(current_state)
 	set_animation()
-	if !died:
+	
+	if current_state!=DEAD:
 		get_collisions()
 		move_input()
 	
-		if !freezed:
+		if phy_state!=PhyState.FREEZED:
 			speed[0] = lerp(speed[0], move_speed*dir, 0.2)
 		else:
 			speed = Vector2.ZERO
 	
-	apply_gravity(delta)	
+	if has_gravity:
+		apply_gravity(delta)	
+	
 	speed = move_and_slide(speed, up)
 	#print(speed)
-	
+
+func check_sides():
+	match(current_side):
+		Side.LEFT:
+			$Texture.scale.x *= -1 if sign($Texture.scale.x) == 1 else 1
+			$wall_raycast.cast_to.x*=-1 if sign($wall_raycast.cast_to.x) == 1 else 1
+		Side.RIGHT:
+			$Texture.scale.x *= -1 if sign($Texture.scale.x) == -1 else 1
+			$wall_raycast.cast_to.x*=-1 if sign($wall_raycast.cast_to.x) == -1 else 1
+
+func check_states(state):
+	match(state):
+		DEAD:
+			dies()
+			
+		IDLE:
+			pass
+			
+		MOVING:
+			pass
+			
+		JUMP:
+			jump()
+			
+		HIT: 
+			pass
+			
+		GRAB:
+			slide_wall()
+			
+		FALLING: 
+			if speed[1]<0:
+				current_state = JUMP
+			
+				
 func move_input():
-	if(!stop):
+	if(phy_state==PhyState.FREE):
 		dir = (int(Input.is_action_pressed("move_right")) - int(Input.is_action_pressed("move_left")))
 		if dir!=0:
+			match(dir):
+				1:
+					current_side = Side.RIGHT
+				-1:
+					current_side = Side.LEFT
 			last_dir = dir
-	if Input.is_action_pressed("go_down") and Input.is_action_pressed("jump") and is_grounded():
+			
+		if is_grounded():
+			current_state = MOVING if dir!=0 else IDLE
+			
+	if Input.is_action_pressed("go_down") and Input.is_action_just_pressed("jump") and is_grounded():
 		position.y +=2
 		
-func _input(event: InputEvent) -> void:
-	if !died:
-		if event.is_action_pressed("jump") and !Input.is_action_pressed("go_down"):
-			if !in_wall():
-				if is_grounded():
-					speed[1] = -jump_force/2
-					
-				elif jumps>0:
-					make_dust()
-					speed[1] = -jump_force/2
-					jumps-=1
-			else:
-				speed[0] -= 200*$Texture.scale.x
+	if Input.is_action_just_pressed("jump") and !Input.is_action_pressed("go_down"):
+		current_state = JUMP
+
+func jump():
+	if !in_wall():
+		if jumps>0:
+			if is_grounded():
 				speed[1] = -jump_force/2
+				jumps-=1
+					
+			else:
+				make_dust()
+				speed[1] = -jump_force/2
+				$AnimationPlayer.play("Double_Jump")
+				jumps = 0
+	else:
+		wall_jumped = true
+		speed[0] -= 400*$Texture.scale.x
+		speed[1] = -jump_force/2		
 			
 func in_wall():
-
-	if !is_grounded() and is_on_wall():
+	if !is_on_floor() and is_on_wall() and can_grab and $wall_raycast.is_colliding():
 		jumps = 1
-		speed[1]*=0.75
+		current_state = GRAB
 		return true
-			
+	
+	wall_jumped = false
+	has_gravity = true
+	if !$wall_time.is_stopped():
+		$wall_time.paused = true
+	
 	return false
+
+func slide_wall():
+	
+	if $wall_time.is_stopped():
+		$wall_time.start()
+		
+	else:
+		$wall_time.paused = false
+				
+	if $wall_time.time_left>$wall_time.wait_time/2:
+		has_gravity = false
+		if !wall_jumped:
+			speed[1] = 0
+		
+	else:
+		has_gravity = true
+		speed[1] *= 1/$wall_time.time_left if $wall_time.time_left>=1 else 1
 		
 		
 func set_animation():
-	var current = "Idle"
-	if dir!=0:
-		current = "Run"
-		$Texture.scale.x = dir
-		
-	if !is_grounded():
-		current = "Jump"
-		
-		if speed.y>0:
-			current = "Fall"
-		elif jumps==0:
-			current="Double_Jump"
-		if in_wall():
-			current = "wall_jump"
-		
-	if hitted:
-		current = "Hit"
+	var asign_animation = "Idle"
 	
-	if died:
-		current = "dead"
-	#update
-	#print(current)
+	if current_state == MOVING:
+		asign_animation = "Run"
+		
+	if $AnimationPlayer.current_animation!="Double_Jump":
+		if current_state==FALLING:
+			asign_animation = "Fall"
+			
+		if current_state == JUMP:
+			asign_animation = "Jump"
+	else: 
+		asign_animation = "Double_Jump"
 	
-	if current == "Run" || current == "wall_jump":
+	if current_state == GRAB:
+		asign_animation = "wall_jump"
+		
+	if current_state == HIT:
+		phy_state = PhyState.STOPPED
+		asign_animation = "Hit"
+	
+	if current_state == DEAD:
+		asign_animation = "dead"
+	
+	if asign_animation == "Run" || asign_animation == "wall_jump":
 		if let_dust:
 			make_dust()	
 			let_dust = false
 	
-	if $AnimationPlayer.assigned_animation!=current:
-		$AnimationPlayer.play(current)
+	if $AnimationPlayer.current_animation!=asign_animation:
+		$AnimationPlayer.play(asign_animation)
 	
 	
 	
 func is_grounded():
 	if is_on_floor():
-		jumps = 1
+		current_state = IDLE
+		jumps = max_jumps
+		$wall_time.stop()
+		can_grab = true
 		return true
+		
+	if !in_wall():
+		current_state = FALLING
+		
 	return false
 	
 func apply_gravity(delta):
 	if speed[1]<450:
 		speed[1] += gravity*delta
 
-func _on_hurtbox_body_entered(body):
-	var specials = ["saw", "Fallzone", "spike_ball", "Railgun", "Spikes"]
-	var immunity_frames = 1
+func take_hit():
 	life-=1
+	current_state = HIT
 	emit_signal("change_life", life, max_life)
 	if life<=0:
-		dies()
-		if body.name!="Spikes":
-			on_knockback(body)
+		current_state = DEAD
 		return false
-	hitted = true
-	if body.has_method("destroy"):
-		body.destroy()
-		
-	if specials.has(body.name) and !is_grounded() and life>0:
-		respawn_after_hit(body)
-		immunity_frames = 2
-	else: 
-		if body.name!="Spikes":
-			on_knockback(body)
-	#immunity frames	
-	get_node("hurtbox/shape").set_deferred("disabled", true)
-	yield(get_tree().create_timer(immunity_frames),"timeout")
-	get_node("hurtbox/shape").set_deferred("disabled", false)
-	hitted = false
+	return true
 	
+func _on_hurtbox_body_entered(body):
+	if $immunity_frames.is_stopped():
+		phy_state = PhyState.STOPPED
+		var specials = ["saw", "Fallzone", "spike_ball", "Railgun", "Spikes", "rock_head"]
+		if !take_hit():
+			return false
+		
+		if body.has_method("destroy"):
+			body.destroy()
+	
+		if specials.has(body.name) and !is_grounded() and life>0 || body.name=="Spikes":
+			respawn_after_hit(body)
+		else: 
+			on_knockback(body)
+		$immunity_frames.start()
 	
 func on_knockback(colisor):
-	
+	speed = Vector2.ZERO
+	var colisor_velocity = null
 	if colisor.has_method("get_velocity"):
-		var colisor_velocity = colisor.get_velocity()
+		colisor_velocity = colisor.get_velocity()
+	elif colisor.get_parent().has_method("get_velocity"):
+		colisor_velocity = colisor.get_parent().get_velocity()
+	
+	if colisor_velocity!=null:
 		#converte a velocidade para positivo
 		colisor_velocity.x*=-1 if(sign(colisor_velocity.x)==-1) else 1
 		
@@ -169,8 +262,8 @@ func on_knockback(colisor):
 			direction = sign(colisor_velocity.x) if sign(colisor_velocity.x)!=0 else -last_dir
 		
 		
-		if colisor_velocity.x == 0 || colisor_velocity.x<300:
-			colisor_velocity.x = 300
+		if colisor_velocity.x == 0 || colisor_velocity.x<500:
+			colisor_velocity.x = 500
 		
 		colisor_velocity.x*= direction	
 		speed = colisor_velocity
@@ -185,7 +278,7 @@ func get_collisions():
 		var collider_obj = get_slide_collision(colliders)
 		#plataforma que cai
 		
-		if collider_obj!=null:
+		if collider_obj.collider!=null:
 			if collider_obj.collider.has_method("collide_with"):
 				collider_obj.collider.collide_with(collider_obj, self)
 		
@@ -201,20 +294,17 @@ func get_collisions():
 func dies():
 	if !died:
 		died = true
-		#speed = Vector2.ZERO
-		#speed[1] = -200
+		has_gravity = true
+		speed = Vector2.ZERO
+		speed[1] = -200
 		emit_signal("change_life", 0, max_life)
 		get_node("HitBox").set_deferred("disabled", true)
-		yield(get_tree().create_timer(3),"timeout")
+		get_node("hurtbox/shape").set_deferred("disabled", true)
 		Global._reset_current()
 	
 func respawn_after_hit(body):
-	Transition.make_respawn_transition()
-	get_node("hurtbox/shape").set_deferred("disabled", true)
-	freezed = true
-	yield(get_tree().create_timer(1.3), "timeout")
-	freezed = false
-	get_node("hurtbox/shape").set_deferred("disabled", false)
+	Transition.make_respawn_transition(self)
+	phy_state = PhyState.FREEZED
 	if last_ground!=null:
 		position = last_ground 
 		
@@ -245,4 +335,24 @@ func make_dust():
 
 
 func _on_dust_cooldown_timeout():
-	let_dust = true
+	if in_wall():
+		if !$wall_time.is_stopped():
+			if $wall_time.time_left<$wall_time.wait_time/2:
+				let_dust = true
+	else:
+		let_dust = true
+
+
+func _on_wall_time_timeout():
+	can_grab = false
+
+
+func _on_AnimationPlayer_animation_finished(anim_name):
+	match anim_name:
+		"Double_Jump":
+			current_state = FALLING
+		"Hit":
+			current_state = IDLE
+			if phy_state == PhyState.STOPPED:
+				phy_state = PhyState.FREE
+

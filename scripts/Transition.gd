@@ -65,13 +65,15 @@ func make_transition(delay):
 	yield(fx, "tween_completed")
 	fade_out(delay)
 
-func make_respawn_transition():
+func make_respawn_transition(player):
 	fx.remove_all()
-	fx.interpolate_property(get_node("fast_overlay"), "color:a", 0, 255, 1, Tween.TRANS_EXPO, Tween.EASE_IN_OUT, 0)
+	fx.interpolate_property(get_node("fast_overlay"), "color:a", 0, 255, 0.3, Tween.TRANS_EXPO, Tween.EASE_IN_OUT, 0)
 	fx.start()
 	yield(fx, "tween_completed")
+	if player.phy_state == player.PhyState.FREEZED:
+		player.phy_state = player.PhyState.FREE
 	fx.remove_all()
-	fx.interpolate_property(get_node("fast_overlay"), "color:a", 255, 0, 1, Tween.TRANS_EXPO, Tween.EASE_IN_OUT, 0)
+	fx.interpolate_property(get_node("fast_overlay"), "color:a", 255, 0, 0.3, Tween.TRANS_EXPO, Tween.EASE_IN_OUT, 0)
 	fx.start()
 
 
