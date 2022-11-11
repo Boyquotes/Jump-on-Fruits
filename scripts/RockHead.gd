@@ -29,7 +29,7 @@ func _physics_process(delta):
 		if movement:
 			stopped = true
 			if visible_screen:
-				Global.get_player_camera().shake(0.2, 5)
+				Global.get_player_camera().shake(0.3, 9)
 					
 			collide_animation()
 			$Timer.start()

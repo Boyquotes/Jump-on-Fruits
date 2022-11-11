@@ -385,7 +385,7 @@ tracks/2/keys = {
 }
 
 [sub_resource type="RectangleShape2D" id=13]
-extents = Vector2( 7, 15 )
+extents = Vector2( 6, 15 )
 
 [node name="RockHead" type="KinematicBody2D"]
 collision_layer = 16
@@ -421,7 +421,7 @@ collision_layer = 16
 collision_mask = 3
 
 [node name="hitbox" type="CollisionShape2D" parent="damage_area"]
-position = Vector2( -4.37114e-08, -23 )
+position = Vector2( -3.6637e-06, -22 )
 rotation = 1.5708
 shape = SubResource( 13 )
 

@@ -60,8 +60,8 @@ func _on_view_change_timeout():
 
 func get_velocity():
 	if current_state == ATTACK:
-		return Vector2(movement.x*4, -150)
-	return movement
+		return speed*9
+	return speed
 
 
 func _on_pos_attack_timeout():

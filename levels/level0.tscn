@@ -197,6 +197,9 @@ position = Vector2( 318, 92 )
 [node name="Player" parent="." instance=ExtResource( 5 )]
 position = Vector2( 272, 21 )
 
+[node name="MainCamera" parent="Player" index="3"]
+zoom = Vector2( 0.8, 0.8 )
+
 [node name="falling_platform" parent="." instance=ExtResource( 2 )]
 position = Vector2( 622, -68 )
 
@@ -210,3 +213,5 @@ position = Vector2( 222, 60 )
 position = Vector2( 158, -132 )
 
 [connection signal="body_entered" from="map/Fallzone" to="map/Fallzone" method="_on_Fallzone_body_entered"]
+
+[editable path="Player"]

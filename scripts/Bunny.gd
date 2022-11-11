@@ -1,6 +1,6 @@
 extends Patrol_Charge_Enemy
 
-export var jump_force = 280
+export var jump_force = 220
 
 func _ready():
 	lifes = 4
