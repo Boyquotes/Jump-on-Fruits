@@ -4,5 +4,9 @@ func _ready():
 	weight = 11.3
 	pass
 
-func _on_life_time_timeout():
-	queue_free()
+
+
+func _on_AnimationPlayer_animation_finished(anim_name):
+	match anim_name:
+		"alive_time":
+			queue_free()

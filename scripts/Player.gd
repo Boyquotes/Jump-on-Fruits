@@ -12,7 +12,7 @@ var died = false
 var speed = Vector2(0,0)
 var has_gravity = true
 var up = Vector2.UP
-var max_life = 32
+var max_life = 4
 var life = max_life
 onready var first_spawn = position
 export var move_speed = 100
@@ -28,11 +28,9 @@ var last_ground = null
 var let_dust = false
 var freezed = false
 var can_grab = true
-
 onready var root = get_tree().get_root()
 var ragdoll_instance = preload("res://items/Player_Ragdoll.tscn")
 var dust_instance = preload("res://projectiles/dust.tscn")
-
 signal change_life(life, max_life)
 
 func _ready():
@@ -86,7 +84,7 @@ func check_states(state):
 			jump()
 			
 		HIT: 
-			pass
+			phy_state = PhyState.STOPPED
 			
 		GRAB:
 			slide_wall()
@@ -111,11 +109,11 @@ func move_input():
 		if is_grounded():
 			current_state = MOVING if dir!=0 else IDLE
 			
-	if Input.is_action_pressed("go_down") and Input.is_action_just_pressed("jump") and is_grounded():
-		position.y +=2
+		if Input.is_action_pressed("go_down") and Input.is_action_just_pressed("jump") and is_grounded():
+			position.y +=2
 		
-	if Input.is_action_just_pressed("jump") and !Input.is_action_pressed("go_down"):
-		current_state = JUMP
+		if Input.is_action_just_pressed("jump") and !Input.is_action_pressed("go_down"):
+			current_state = JUMP
 
 func jump():
 	if !in_wall():
@@ -135,7 +133,7 @@ func jump():
 		speed[1] = -jump_force/2		
 			
 func in_wall():
-	if !is_on_floor() and is_on_wall() and can_grab and $wall_raycast.is_colliding():
+	if !is_on_floor() and is_on_wall() and can_grab and $wall_raycast.is_colliding() and current_state!=HIT and phy_state == PhyState.FREE:
 		jumps = 1
 		$ProgressBar.visible = true
 		current_state = GRAB
@@ -249,12 +247,11 @@ func apply_knockback(colisor):
 	speed = Vector2.ZERO
 	var direction = colisor.global_position.direction_to(self.global_position)
 	knockback_dir = direction
-	print(direction)
 	if current_state!=DEAD:
-		speed = direction*300
+		speed = direction*550
 		if colisor.has_method("get_velocity"):
 			if colisor.get_velocity() is float or colisor.get_velocity() is int:
-				if colisor.get_velocity()>300:
+				if colisor.get_velocity()>550:
 					if colisor.name.find("Rhino")!=-1:
 						if colisor.current_state == colisor.ATTACK:
 							direction.y = -0.1

@@ -67,7 +67,7 @@ tile_data = PoolIntArray( -458690, 13, 0, -458689, 14, 0, -458688, 14, 0, -45868
 tile_set = ExtResource( 29 )
 cell_size = Vector2( 16, 16 )
 collision_layer = 16
-collision_mask = 16
+collision_mask = 32
 format = 1
 tile_data = PoolIntArray( -655244, 0, 0, -655243, 0, 0, -589706, 0, 0, -589705, 0, 0, -589704, 0, 0 )
 
